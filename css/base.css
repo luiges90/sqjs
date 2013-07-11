@@ -1,0 +1,14 @@
+body {
+	background-color: white;
+}
+
+#scene {
+	position: absolute;
+	border: 5px solid white;
+	background-color: black;
+	margin: auto;
+	top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}

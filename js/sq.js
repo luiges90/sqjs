@@ -2,7 +2,7 @@
 
 var world;
 
-(function() {
+//(function() {
 
 	var player;
 	var playerBullet = [];
@@ -29,6 +29,8 @@ var world;
 	var mouse = {};
 	function step(timestamp) {
 		if (pausing) return;
+		
+		checkCompleted();
 	
 		world.Step(1/60, 3, 2);
 		
@@ -103,13 +105,20 @@ var world;
 	}
 
 	function newWave() {
-		for (var i = 0; i < 1; ++i){
+		for (var i = 0; i < wave; ++i){
 			var e = Object.create(SqEntity);
 			e.init(TYPE_ENEMY, randomLocationAvoidRadius(-3, 3, -3, 3, player.body.GetPosition(), 1), 0.12, {
 				linearVelocity: rtToVector(0.15, randomAngle())
 			});
 			
 			enemy.push(e);
+		}
+	}
+	
+	function checkCompleted() {
+		if (enemy.length <= 0){
+			wave++;
+			newWave();
 		}
 	}
 
@@ -212,4 +221,4 @@ var world;
 
 		animate();
 	});
-})();
+//})();

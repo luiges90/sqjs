@@ -76,8 +76,10 @@ function addCircleShape(world, positionVector, radius, options) {
 }
 
 function distanceSquared(d1, d2){
-	d1.Subtract(d2);
-	return d1.LengthSquared();
+	var v1 = new b2Vec2(d1.x, d1.y);
+	var v2 = new b2Vec2(d2.x, d2.y);
+	v1.Subtract(v2);
+	return v1.LengthSquared();
 }
 
 function randomLocation(x1, x2, y1, y2) {
@@ -88,6 +90,7 @@ function randomLocationAvoidRadius(x1, x2, y1, y2, avoid, radius) {
 	var result;
 	do {
 		result = randomLocation(x1, x2, y1, y2);
+		
 	} while (distanceSquared(result, avoid) <= radius * radius);
 	return result;
 }

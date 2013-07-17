@@ -10,7 +10,7 @@ var SqEntity = {
 
 	init: function(type, position, size, options){
 		var options = options || {};
-		
+
 		var objectClass = type == TYPE_PLAYER ? 'player' : type == TYPE_PLAYER_BULLET ? 'player-bullet' : 'enemy';
 		
 		var shapeOptions = {

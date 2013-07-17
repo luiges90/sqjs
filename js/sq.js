@@ -94,15 +94,15 @@ var world;
 
 		contact.SetEnabled(false);
 		
-		if ((a.type === 0 && b.type === 1) || (a.type === 1 && b.type === 0)) {
+		if ((a.type === TYPE_ENEMY && b.type === TYPE_PLAYER) || (a.type === TYPE_PLAYER && b.type === TYPE_ENEMY)) {
 			lives--;
 			if (lives <= 0) {
 				setTimeout(gameover, 4000);
 			} else {
 				setTimeout(revive, 4000);
-			}
+			}s
 			if (a.type === 0) a.destroy(); else b.destroy();
-		} else if ((a.type === 2 && b.type === 1) || (a.type === 1 && b.type === 2)) {
+		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score++;
 			a.destroy();
 			b.destroy();
@@ -113,7 +113,7 @@ var world;
 	function newWave() {
 		for (var i = 0; i < wave; ++i){
 			var e = Object.create(SqEntity);
-			e.init(TYPE_ENEMY, randomLocationAvoidRadius(-3, 3, -3, 3, player.body.GetPosition(), 1), 0.12, {
+			e.init(TYPE_ENEMY,  randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
 				linearVelocity: rtToVector(0.15, randomAngle())
 			});
 			

@@ -44,7 +44,7 @@ var world;
 		canvas.fillText(wave, 300, 300);
 
 		if (player.isDestroyed()) {
-			world.DestroyBody(player.body);
+			
 		} else {
 			player.move();
 			player.step();
@@ -94,14 +94,20 @@ var world;
 
 		contact.SetEnabled(false);
 		
-		if ((a.type === 0 && b.type === 1) || (a.type == 1 && b.type == 0)) {
+		if ((a.type === 0 && b.type === 1) || (a.type === 1 && b.type === 0)) {
 			lives--;
-		} else if ((a.type === 2 && b.type === 1) || (a.type===1 && b.type === 2)) {
+			if (lives <= 0) {
+				setTimeout(gameover, 4000);
+			} else {
+				setTimeout(revive, 4000);
+			}
+			if (a.type === 0) a.destroy(); else b.destroy();
+		} else if ((a.type === 2 && b.type === 1) || (a.type === 1 && b.type === 2)) {
 			score++;
+			a.destroy();
+			b.destroy();
 		}
-		
-		a.destroy();
-		b.destroy();
+
 	}
 
 	function newWave() {
@@ -120,6 +126,14 @@ var world;
 			wave++;
 			newWave();
 		}
+	}
+	
+	function gameover() {
+		//alert('Game over');
+	}
+	
+	function revive() {
+		player.revive();
 	}
 
 	function initControl() {

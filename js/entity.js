@@ -82,6 +82,10 @@ var SqEntity = {
 		return this.destroyed;
 	},
 	
+	revive: function() {
+		this.destroyed = false;
+	},
+	
 	step: function() {
 		this.fireCooldownTimer--;
 		this.lifetimeTimer--;

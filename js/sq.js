@@ -34,6 +34,12 @@ var world;
 		
 		var canvas = document.getElementById('scene').getContext('2d');
 		canvas.clearRect(0, 0, 600, 600);
+		
+		canvas.font = '200px "Century Gothic", CenturyGothic, AppleGothic, sans-serif';
+		canvas.textAlign = 'center';
+		canvas.textBaseline = 'middle';
+		canvas.fillStyle = 'hsl(0, 0%, 40%)';
+		canvas.fillText(wave, 300, 300);
 
 		if (player.isDestroyed()) {
 			world.DestroyBody(player.body);
@@ -62,6 +68,15 @@ var world;
 				enemy[i].step();
 			}
 		}
+		
+		canvas.font = '24px "Century Gothic", CenturyGothic, AppleGothic, sans-serif';
+		canvas.textAlign = 'left';
+		canvas.textBaseline = 'top';
+		canvas.fillStyle = 'hsl(0, 0%, 100%)';
+		canvas.fillText('Lives: ' + lives, 0, 0);
+		
+		canvas.textAlign = 'right';
+		canvas.fillText('Score: ' + score, 600, 0);
 	}
 
 	function animate() {
@@ -73,9 +88,15 @@ var world;
 		var a = contact.GetFixtureA().GetBody().GetUserData();
 		var b = contact.GetFixtureB().GetBody().GetUserData();
 		
-		if (a === null || b == null) return;
+		if (a === null || b === null) return;
 
 		contact.SetEnabled(false);
+		
+		if ((a.type === 0 && b.type === 1) || (a.type == 1 && b.type == 0)) {
+			lives--;
+		} else if ((a.type === 2 && b.type === 1) || (a.type===1 && b.type === 2)) {
+			score++;
+		}
 		
 		a.destroy();
 		b.destroy();

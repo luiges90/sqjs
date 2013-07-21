@@ -2,6 +2,8 @@
 
 var world;
 
+var FPS = 60;
+
 //(function() {
 
 	var player;
@@ -21,7 +23,7 @@ var world;
 				window.oRequestAnimationFrame      || 
 				window.msRequestAnimationFrame     || 
 				function( callback ){
-				  window.setTimeout(callback, 1000 / 60);
+				  window.setTimeout(callback, 1000 / FPS);
 				};
 	})();
 
@@ -32,8 +34,8 @@ var world;
 		
 		checkCompleted();
 	
-		world.Step(1/60, 3, 2);
-		
+		world.Step(1/FPS, 3, 2);
+
 		var canvas = document.getElementById('scene').getContext('2d');
 		canvas.clearRect(0, 0, 600, 600);
 		
@@ -86,22 +88,35 @@ var world;
 		step();
 	}
 	
-	function onContact(contact, oldManifold) {
+	function onPreSolve(contact, oldManifold) {
 		var a = contact.GetFixtureA().GetBody().GetUserData();
 		var b = contact.GetFixtureB().GetBody().GetUserData();
 		
 		if (a === null || b === null) return;
 
 		contact.SetEnabled(false);
+	}
+	
+	function onContact(contact) {
+		var a = contact.GetFixtureA().GetBody().GetUserData();
+		var b = contact.GetFixtureB().GetBody().GetUserData();
+		
+		if (a === null || b === null) return;
 		
 		if ((a.type === TYPE_ENEMY && b.type === TYPE_PLAYER) || (a.type === TYPE_PLAYER && b.type === TYPE_ENEMY)) {
-			lives--;
-			if (lives <= 0) {
-				setTimeout(gameover, 4000);
-			} else {
-				setTimeout(revive, 4000);
-			}s
-			if (a.type === 0) a.destroy(); else b.destroy();
+			var p = a.type === TYPE_PLAYER ? a : b;
+
+			if (!p.invincible && !p.destroyed) {
+				lives--;
+				if (lives <= 0) {
+					setTimeout(gameover, 4000);
+				} else {
+					setTimeout(revive, 4000);
+				}
+				
+				p.body.SetLinearVelocity(new b2Vec2(0, 0));
+				p.destroy();
+			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score++;
 			a.destroy();
@@ -182,6 +197,7 @@ var world;
 		world = new b2World(new b2Vec2(0, 0));
 		
 		var listener = new b2ContactListener;
+		listener.PreSolve = onPreSolve;
 		listener.BeginContact = onContact;
 
 		world.SetContactListener(listener);

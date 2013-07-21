@@ -44,6 +44,7 @@ function addShape(world, positionVector, options, addShapeFunc){
 	}
 	fd.filter.categoryBits = options.filterCategory || 0xFFFF;
 	fd.filter.maskBits = options.filterMask || 0xFFFF;
+	fd.isSensor = options.sensor || false;
 
 	body.CreateFixture(fd);
 	body.ApplyImpulse(options.linearVelocity, body.GetWorldCenter());

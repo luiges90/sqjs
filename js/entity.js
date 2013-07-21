@@ -43,6 +43,9 @@ var SqEntity = {
 		
 		this.destroyed = false;
 		
+		this.invincible = false
+		this.invincibleTimer = -1;
+		
 		entityId++;
 	},
 	
@@ -54,9 +57,14 @@ var SqEntity = {
 			drawX = this.body.GetPosition().x * 100 + 300;
 			drawY = -this.body.GetPosition().y * 100 + 300;
 			drawSize = this.size * 100;
+			
+			var opacity = 1;
+			if (this.invincible && this.invincibleTimer % 30 < 15) {
+				opacity = 0;
+			}
 		
 			canvas.beginPath();
-			canvas.fillStyle = "hsl(0, 0%, 75%)";
+			canvas.fillStyle = "hsla(0, 0%, 75%, " + opacity + ")";
 			canvas.arc(drawX, drawY, drawSize, 0, 2 * Math.PI, true);
 			canvas.fill();
 		} else {
@@ -64,7 +72,7 @@ var SqEntity = {
 		
 			canvas.save();
 			
-			canvas.fillStyle = "hsl(0, 100%, 50%)";
+			canvas.fillStyle = "hsla(0, 100%, 50%, 1)";
 			
 			canvas.translate(this.body.GetPosition().x * 100 + 300, -this.body.GetPosition().y * 100 + 300);
 			canvas.rotate(-this.body.GetAngle());
@@ -84,15 +92,24 @@ var SqEntity = {
 	
 	revive: function() {
 		this.destroyed = false;
+		this.invincible = true;
+		this.invincibleTimer = FPS * 3;
 	},
 	
 	step: function() {
 		this.fireCooldownTimer--;
+		
 		this.lifetimeTimer--;
 		if (this.lifetimeTimer <= 0 && this.lifetime > 0) 
 		{
 			this.destroy();
 		}
+		
+		this.invincibleTimer--;
+		if (this.invincibleTimer <= 0) {
+			this.invincible = false;
+		}
+		
 		if (this.type == TYPE_ENEMY) {
 			this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
 		}

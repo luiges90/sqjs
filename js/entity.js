@@ -34,18 +34,13 @@ var SqEntity = {
 		this.type = type;
 		this.id = entityId;
 		this.force = 0.015;
-		this.fireCooldown = options.fireCooldown || -1;
 		this.lifetime = options.lifetime || -1;
 		this.size = size;
 		
-		this.fireCooldownTimer = 0;
 		this.lifetimeTimer = this.lifetime;
 		
 		this.destroyed = false;
-		
-		this.invincible = false
-		this.invincibleTimer = -1;
-		
+
 		entityId++;
 	},
 	
@@ -82,54 +77,20 @@ var SqEntity = {
 		}
 	},
 	
+	step: function() {
+		this.lifetimeTimer--;
+		if (this.lifetimeTimer <= 0 && this.lifetime > 0) 
+		{
+			this.destroy();
+		}
+	}
+	
 	destroy: function() {
 		this.destroyed = true;
 	},
 	
 	isDestroyed: function() {
 		return this.destroyed;
-	},
-	
-	revive: function() {
-		this.destroyed = false;
-		this.invincible = true;
-		this.invincibleTimer = FPS * 3;
-	},
-	
-	step: function() {
-		this.fireCooldownTimer--;
-		
-		this.lifetimeTimer--;
-		if (this.lifetimeTimer <= 0 && this.lifetime > 0) 
-		{
-			this.destroy();
-		}
-		
-		this.invincibleTimer--;
-		if (this.invincibleTimer <= 0) {
-			this.invincible = false;
-		}
-		
-		if (this.type == TYPE_ENEMY) {
-			this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
-		}
-	},
-	
-	fire: function(position){
-		if (this.fireCooldownTimer > 0) return;
-		this.fireCooldownTimer = this.fireCooldown;
-
-		var fireVector = new b2Vec2(position.x - this.body.GetPosition().x, position.y - this.body.GetPosition().y);
-		fireVector.Normalize();
-		fireVector.Multiply(0.06);
-
-		var bullet = Object.create(SqEntity);
-		bullet.init(TYPE_PLAYER_BULLET, new b2Vec2(this.body.GetPosition().x, this.body.GetPosition().y), 0.06, {
-			lifetime: 60,
-			linearVelocity: fireVector
-		});
-
-		return bullet;
 	},
 
 };

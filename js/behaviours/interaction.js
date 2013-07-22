@@ -48,6 +48,14 @@ function moveByWASD(keys, mouse, player, playerBullet, enemy) {
 }
 
 function fireByLeftMouse(keys, mouse, player, playerBullet, enemy) {
+	if (typeof this.fireCooldown === 'undefined') {
+		throw 'fireCooldown must be defined for fireByLeftMouse behaviour.';
+	}
+	
+	if (typeof this.fireCooldownTimer === 'undefined') {
+		this.fireCooldownTimer = 0;
+	}
+
 	if (mouse[1] && this.fireCooldownTimer <= 0) {
 		this.fireCooldownTimer = this.fireCooldown;
 		

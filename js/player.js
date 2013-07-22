@@ -19,7 +19,6 @@ function createPlayer() {
 	};
 	
 	player.fireCooldown = 3;
-	player.fireCooldownTimer = 0;
 	
 	player.stepAction.push(moveByWASD);
 	player.stepAction.push(fireByLeftMouse);

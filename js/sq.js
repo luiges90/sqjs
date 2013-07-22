@@ -126,7 +126,9 @@ var FPS = 60;
 	}
 
 	function newWave() {
-		for (var i = 0; i < wave; ++i){
+		var count = wave;
+	
+		for (var i = 0; i < count; ++i){
 			var e = Object.create(SqEntity);
 			e.init(TYPE_ENEMY,  randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
 				linearVelocity: rtToVector(0.15, randomAngle())

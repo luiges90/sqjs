@@ -25,7 +25,7 @@ var SqEntity = {
 			linearVelocity: options.linearVelocity || new b2Vec2(0, 0)
 		};
 
-		this.body = type == TYPE_ENEMY ? addBoxShape(world, position, size, size, shapeOptions): 
+		this.body = type === TYPE_ENEMY ? addBoxShape(world, position, size, size, shapeOptions): 
 										addCircleShape(world, position, size, shapeOptions);
 		
 		this.body.SetUserData(this);
@@ -37,7 +37,9 @@ var SqEntity = {
 		this.fireCooldown = options.fireCooldown || -1;
 		this.lifetime = options.lifetime || -1;
 		this.size = size;
+		this.color = options.color || (type === TYPE_ENEMY ? {h: 0, s: 1, l: 0.5, a: 1} : {h: 0, s: 0, l: 0.75, a: 1});
 		
+		// private state variables
 		this.fireCooldownTimer = 0;
 		this.lifetimeTimer = this.lifetime;
 		
@@ -58,13 +60,13 @@ var SqEntity = {
 			drawY = -this.body.GetPosition().y * 100 + 300;
 			drawSize = this.size * 100;
 			
-			var opacity = 1;
+			var opacity = this.color.a;
 			if (this.invincible && this.invincibleTimer % 30 < 15) {
 				opacity = 0;
 			}
 		
 			canvas.beginPath();
-			canvas.fillStyle = "hsla(0, 0%, 75%, " + opacity + ")";
+			canvas.fillStyle = "hsla(" + this.color.h + ", " + this.color.s * 100 + "%, " + this.color.l * 100 + "%, " + opacity + ")";
 			canvas.arc(drawX, drawY, drawSize, 0, 2 * Math.PI, true);
 			canvas.fill();
 		} else {
@@ -72,7 +74,7 @@ var SqEntity = {
 		
 			canvas.save();
 			
-			canvas.fillStyle = "hsla(0, 100%, 50%, 1)";
+			canvas.fillStyle = "hsla(" + this.color.h + ", " + this.color.s * 100 + "%, " + this.color.l * 100 + "%, " + this.color.a + ")";
 			
 			canvas.translate(this.body.GetPosition().x * 100 + 300, -this.body.GetPosition().y * 100 + 300);
 			canvas.rotate(-this.body.GetAngle());

@@ -1,10 +1,8 @@
 "use strict";
 
-function createEnemy(player) {
+function createEnemy(location, size, options) {
 	var e = Object.create(SqEntity);
-	e.init(TYPE_ENEMY,  randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
-		linearVelocity: rtToVector(0.15, randomAngle())
-	});
+	e.init(TYPE_ENEMY, location, size, options);
 	
 	e.stepAction.push(function(keys, mouse, player, playerBullet, enemy){
 		this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));	

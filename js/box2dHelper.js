@@ -12,13 +12,12 @@ var   b2Vec2 = Box2D.Common.Math.b2Vec2
 			,   b2ContactListener = Box2D.Dynamics.b2ContactListener
             ;
 			
-
 function randBetween(min, max) {
 	return Math.random() * (max - min) + min;
 }
 
 function randIntBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function addShape(world, positionVector, options, addShapeFunc){

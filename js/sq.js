@@ -48,7 +48,6 @@ var FPS = 60;
 		if (player.isDestroyed()) {
 			
 		} else {
-			player.move();
 			player.step();
 			player.draw();
 		}
@@ -106,7 +105,7 @@ var FPS = 60;
 		if ((a.type === TYPE_ENEMY && b.type === TYPE_PLAYER) || (a.type === TYPE_PLAYER && b.type === TYPE_ENEMY)) {
 			var p = a.type === TYPE_PLAYER ? a : b;
 
-			if (!p.invincible && !p.destroyed) {
+			if (!p.isInvincible() && !p.isDestroyed()) {
 				lives--;
 				if (lives <= 0) {
 					setTimeout(gameover, 4000);
@@ -133,6 +132,9 @@ var FPS = 60;
 			e.init(TYPE_ENEMY,  randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
 				linearVelocity: rtToVector(0.15, randomAngle())
 			});
+			e.step = function(){
+				this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));	
+			};
 			
 			enemy.push(e);
 		}
@@ -193,6 +195,70 @@ var FPS = 60;
 			return false;
 		});
 	}
+	
+	function createPlayer() {
+		var player = Object.create(SqEntity);
+		player.init(TYPE_PLAYER, new b2Vec2(0, 0), 0.12, {
+			linearDamping: 1.5
+		});
+		
+		player.invincibleTimer = 0;
+		player.isInvincible = function(){return this.invincibleTimer > 0;};
+		
+		player.fireCooldown = 3;
+		player.fireCooldownTimer = 0;
+		
+		player.step = function() {
+			// move player action
+			var body = this.body;
+			var force = this.force;
+			for (var i in keys){
+				switch (i) {
+					case '87': //'w'
+						body.ApplyImpulse(new b2Vec2(0, force), body.GetWorldCenter());
+						break;
+					case '65': //'a'
+						body.ApplyImpulse(new b2Vec2(-force, 0), body.GetWorldCenter());
+						break;
+					case '83': //'s'
+						body.ApplyImpulse(new b2Vec2(0, -force), body.GetWorldCenter());
+						break;
+					case '68': //'d'
+						body.ApplyImpulse(new b2Vec2(force, 0), body.GetWorldCenter());
+						break;
+				}
+			}
+			
+			// fire action
+			if (mouse[1] && this.fireCooldownTimer > 0) {
+				this.fireCooldownTimer = this.fireCooldown;
+				
+				var fireVector = new b2Vec2(position.x - this.body.GetPosition().x, position.y - this.body.GetPosition().y);
+				fireVector.Normalize();
+				fireVector.Multiply(0.06);
+		
+				var bullet = Object.create(SqEntity);
+				bullet.init(TYPE_PLAYER_BULLET, new b2Vec2(this.body.GetPosition().x, this.body.GetPosition().y), 0.06, {
+					lifetime: 60,
+					linearVelocity: fireVector
+				});
+					
+				playerBullet.push(bullet);
+			}
+			
+			// maintain state
+			this.fireCooldownTimer--;
+		
+			this.invincibleTimer--;	
+		};
+		
+		player.revive = function() {
+			this.destroyed = false;
+			this.invincibleTimer = FPS * 3;	
+		};
+		
+		return player;
+	}
 
 	$(document).ready(function() {
 
@@ -211,41 +277,7 @@ var FPS = 60;
 		addEdgeShape(world, new b2Vec2(3, 3), new b2Vec2(3, -3), {restitution: 1});
 
 		// player entity
-		player = Object.create(SqEntity);
-		player.init(TYPE_PLAYER, new b2Vec2(0, 0), 0.12, {
-			linearDamping: 1.5,
-			fireCooldown: 3
-		});
-		
-		player.move = function() {
-			// move player
-			var body = player.body;
-			var force = player.force;
-			for (var i in keys){
-				switch (i) {
-					case '87': //'w'
-						body.ApplyImpulse(new b2Vec2(0, force), body.GetWorldCenter());
-						break;
-					case '65': //'a'
-						body.ApplyImpulse(new b2Vec2(-force, 0), body.GetWorldCenter());
-						break;
-					case '83': //'s'
-						body.ApplyImpulse(new b2Vec2(0, -force), body.GetWorldCenter());
-						break;
-					case '68': //'d'
-						body.ApplyImpulse(new b2Vec2(force, 0), body.GetWorldCenter());
-						break;
-				}
-			}
-			
-			// fire
-			if (mouse[1]) {
-				var bullet = player.fire(mouse.position);
-				if (typeof bullet === 'object') {
-					playerBullet.push(bullet);
-				}
-			}
-		};
+		player = createPlayer();
 		
 		initControl();
 		

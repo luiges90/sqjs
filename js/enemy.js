@@ -4,9 +4,7 @@ function createEnemy(location, size, options) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
 	
-	e.stepAction.push(function(keys, mouse, player, playerBullet, enemy){
-		this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));	
-	});
+	e.stepAction.push(alignRotationToMovement);
 	
 	e.draw = function(){
 		var canvas = document.getElementById('scene').getContext('2d');

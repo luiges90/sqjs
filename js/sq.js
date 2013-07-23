@@ -128,7 +128,7 @@ var FPS = 60;
 		for (var i = 0; i < count; ++i){
 			var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
 				linearVelocity: rtToVector(0.15, randomAngle())
-			});
+			}, [alignRotationToMovement]);
 			
 			enemy.push(e);
 		}

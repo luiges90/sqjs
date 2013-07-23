@@ -1,10 +1,12 @@
 "use strict";
 
-function createEnemy(location, size, options) {
+function createEnemy(location, size, options, behaviours) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
 	
-	e.stepAction.push(alignRotationToMovement);
+	for (var i = 0; i < behaviours; ++i) {
+		e.stepAction.push(behaviours[i]);
+	}
 	
 	e.draw = function(){
 		var canvas = document.getElementById('scene').getContext('2d');

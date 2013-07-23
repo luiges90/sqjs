@@ -3,11 +3,11 @@
 function createEnemy(location, size, options, behaviours) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
-	
-	for (var i = 0; i < behaviours; ++i) {
-		e.stepAction.push(behaviours[i]);
-	}
-	
+
+	$.each(behaviours, function(){
+		e.stepAction.push(this);
+	});
+
 	e.draw = function(){
 		var canvas = document.getElementById('scene').getContext('2d');
 		var drawSize = this.size * 100;

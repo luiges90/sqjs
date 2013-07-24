@@ -9,6 +9,7 @@ var FPS = 60;
 	var player;
 	var playerBullet = [];
 	var enemy = [];
+	var oldEnemy = [];
 	
 	var lives = 5;
 	var score = 0;
@@ -121,23 +122,12 @@ var FPS = 60;
 		}
 
 	}
-
-	function newWave() {
-		var count = wave;
-	
-		for (var i = 0; i < count; ++i){
-			var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
-				linearVelocity: rtToVector(0.15, randomAngle())
-			}, [alignRotationToMovement]);
-			
-			enemy.push(e);
-		}
-	}
 	
 	function checkCompleted() {
 		if (enemy.length <= 0){
 			wave++;
-			newWave();
+			enemy = waveGenerator(wave, player, oldEnemy);
+			oldEnemy = enemy.slice();
 		}
 	}
 	
@@ -211,7 +201,8 @@ var FPS = 60;
 		
 		initControl();
 		
-		newWave();
+		enemy = waveGenerator(wave, player);
+		oldEnemy = enemy.slice();
 
 		animate();
 	});

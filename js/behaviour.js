@@ -1,5 +1,9 @@
 "use strict";
 
+function alignRotationToMovement(keys, mouse, player, playerBullet, enemy){
+	this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));	
+}
+
 function createPlayerBullet(parent, fireVector) {
 	var bullet = Object.create(SqEntity);
 	bullet.init(TYPE_PLAYER_BULLET, new b2Vec2(parent.body.GetPosition().x, parent.body.GetPosition().y), 0.06, {

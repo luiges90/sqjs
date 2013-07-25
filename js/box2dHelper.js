@@ -11,7 +11,7 @@ var   b2Vec2 = Box2D.Common.Math.b2Vec2
          	,	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
 			,   b2ContactListener = Box2D.Dynamics.b2ContactListener
             ;
-			
+
 function randBetween(min, max) {
 	return Math.random() * (max - min) + min;
 }
@@ -33,7 +33,7 @@ function addShape(world, positionVector, options, addShapeFunc){
 	var body = world.CreateBody(bd);
 
 	var shape = addShapeFunc();
-	
+
 	var fd = new b2FixtureDef();
 	fd.shape = shape;
 	for (var i in options){
@@ -47,7 +47,7 @@ function addShape(world, positionVector, options, addShapeFunc){
 
 	body.CreateFixture(fd);
 	body.ApplyImpulse(options.linearVelocity, body.GetWorldCenter());
-	
+
 	return body;
 }
 
@@ -90,7 +90,7 @@ function randomLocationAvoidRadius(x1, x2, y1, y2, avoid, radius) {
 	var result;
 	do {
 		result = randomLocation(x1, x2, y1, y2);
-		
+
 	} while (distanceSquared(result, avoid) <= radius * radius);
 	return result;
 }
@@ -113,4 +113,13 @@ function rad2deg(x) {
 
 function deg2rad(x) {
 	return x / 180 * Math.PI;
+}
+
+function vectorFromTo(from, to, magnitude) {
+	var vector = new b2Vec2(to.x - from.x, to.y - from.y);
+	if (magnitude) {
+		vector.Normalize();
+		vector.Multiply(0.06);
+	}
+	return vector;
 }

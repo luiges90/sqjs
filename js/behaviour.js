@@ -1,7 +1,7 @@
 "use strict";
 
 function alignRotationToMovement(keys, mouse, player, playerBullet, enemy){
-	this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));	
+	this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
 }
 
 function createPlayerBullet(parent, fireVector) {
@@ -10,23 +10,23 @@ function createPlayerBullet(parent, fireVector) {
 		lifetime: 60,
 		linearVelocity: fireVector
 	});
-	
+
 	bullet.draw = function(){
 		var canvas = document.getElementById('scene').getContext('2d');
 		var drawX, drawY, drawSize;
-		
+
 		drawX = this.body.GetPosition().x * 100 + 300;
 		drawY = -this.body.GetPosition().y * 100 + 300;
 		drawSize = this.size * 100;
-		
+
 		var opacity = this.color.a;
-	
+
 		canvas.beginPath();
 		canvas.fillStyle = "hsla(" + this.color.h + ", " + this.color.s * 100 + "%, " + this.color.l * 100 + "%, " + opacity + ")";
 		canvas.arc(drawX, drawY, drawSize, 0, 2 * Math.PI, true);
 		canvas.fill();
 	};
-	
+
 	return bullet;
 }
 
@@ -55,24 +55,22 @@ function fireByLeftMouse(keys, mouse, player, playerBullet, enemy) {
 	if (typeof this.fireCooldown === 'undefined') {
 		throw 'fireCooldown must be defined for fireByLeftMouse behaviour.';
 	}
-	
+
 	if (typeof this.fireCooldownTimer === 'undefined') {
 		this.fireCooldownTimer = 0;
 	}
 
 	if (mouse[1] && this.fireCooldownTimer <= 0) {
 		this.fireCooldownTimer = this.fireCooldown;
-		
+
 		var position = mouse.position;
-		
-		var fireVector = new b2Vec2(position.x - this.body.GetPosition().x, position.y - this.body.GetPosition().y);
-		fireVector.Normalize();
-		fireVector.Multiply(0.06);
+
+		var fireVector = vectorFromTo(player.body.GetPosition(), position, 0.06);
 
 		var bullet = createPlayerBullet(player, fireVector);
-			
+
 		playerBullet.push(bullet);
 	}
-	
+
 	this.fireCooldownTimer--;
 }

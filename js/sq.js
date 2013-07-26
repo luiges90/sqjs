@@ -116,7 +116,7 @@ var FPS = 60;
 				p.destroy();
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
-			score++;
+			score += a.scoreOnDestroy + b.scoreOnDestroy;
 			a.destroy();
 			b.destroy();
 		}

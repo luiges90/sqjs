@@ -28,3 +28,6 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 	}
 }
 
+function randomFire(keys, mouse, player, playerBullet, enemy) {
+	
+}

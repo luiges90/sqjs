@@ -37,6 +37,7 @@ var SqEntity = {
 		this.lifetime = options.lifetime || -1;
 		this.size = size;
 		this.color = options.color || (type === TYPE_ENEMY ? {h: 0, s: 1, l: 0.5, a: 1} : {h: 0, s: 0, l: 0.75, a: 1});
+		this.scoreOnDestroy = options.scoreOnDestroy || (type === TYPE_ENEMY ? 1 : 0);
 
 		this.stepAction = [];
 		

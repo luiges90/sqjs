@@ -1,3 +1,3 @@
 "use strict";
 
-var waveGenerator = simpleWave;
+var waveGenerator = typedWave;

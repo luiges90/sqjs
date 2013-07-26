@@ -4,6 +4,22 @@ function alignRotationToMovement(keys, mouse, player, playerBullet, enemy){
 	this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
 }
 
+function chasePlayer(keys, mouse, player, playerBullet, enemy) {
+	if (typeof this.chaseFactor === 'undefined') {
+		throw 'chaseFactor must be defined for chasePlayer behaviour.';
+	}
+
+	var current = this.body.GetAngle();
+	var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
+
+	var diff = target - current;
+
+	var change = Math.min(diff, this.chaseFactor);
+	change = Math.max(-diff, change);
+	console.log(change);
+
+}
+
 function createPlayerBullet(parent, fireVector) {
 	var bullet = Object.create(SqEntity);
 	bullet.init(TYPE_PLAYER_BULLET, new b2Vec2(parent.body.GetPosition().x, parent.body.GetPosition().y), 0.06, {
@@ -35,15 +51,19 @@ function moveByWASD(keys, mouse, player, playerBullet, enemy) {
 	var force = this.force;
 	for (var i in keys){
 		switch (i) {
+			case '38': // up key
 			case '87': //'w'
 				body.ApplyImpulse(new b2Vec2(0, force), body.GetWorldCenter());
 				break;
+			case '37': // left key
 			case '65': //'a'
 				body.ApplyImpulse(new b2Vec2(-force, 0), body.GetWorldCenter());
 				break;
+			case '40': // down key
 			case '83': //'s'
 				body.ApplyImpulse(new b2Vec2(0, -force), body.GetWorldCenter());
 				break;
+			case '39': // right key
 			case '68': //'d'
 				body.ApplyImpulse(new b2Vec2(force, 0), body.GetWorldCenter());
 				break;

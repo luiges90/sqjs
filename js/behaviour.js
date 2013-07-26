@@ -64,7 +64,7 @@ function randomFire(keys, mouse, player, playerBullet, enemy) {
 }
 
 function aimedFire(keys, mouse, player, playerBullet, enemy) {
-	requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime']);
+	requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime', 'aimError']);
 	
 	if (typeof this.fireCooldownTimer === 'undefined') {
 		this.fireCooldownTimer = randBetween(0, this.fireCooldown);
@@ -81,7 +81,7 @@ function aimedFire(keys, mouse, player, playerBullet, enemy) {
 
 		var position = this.body.GetPosition();
 
-		options.linearVelocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())));
+		options.linearVelocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
 		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
 
@@ -94,7 +94,11 @@ function aimedFire(keys, mouse, player, playerBullet, enemy) {
 function hp(keys, mouse, player, playerBullet, enemy) {
 	requiredFields.call(this, ['hp']);
 	
-	this.hp--;
+	if (typeof this.currentHp === 'undefined') {
+		this.currentHp = this.hp;
+	}
 	
-	return this.hp > 0;
+	this.currentHp--;
+	
+	return this.currentHp > 0;
 }

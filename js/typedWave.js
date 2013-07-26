@@ -47,6 +47,7 @@ function typedWave(wave, player, oldEnemy) {
 		e.bulletSize = 0.06;
 		e.bulletSpeed = 0.05;
 		e.bulletLifetime = 60;
+		e.aimError = deg2rad(10);
 		e.bulletBehaviours = [alignRotationToMovement];
 		return e;
 	};

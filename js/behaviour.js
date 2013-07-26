@@ -90,3 +90,11 @@ function aimedFire(keys, mouse, player, playerBullet, enemy) {
 
 	this.fireCooldownTimer--;
 }
+
+function hp(keys, mouse, player, playerBullet, enemy) {
+	requiredFields.call(this, ['hp']);
+	
+	this.hp--;
+	
+	return this.hp > 0;
+}

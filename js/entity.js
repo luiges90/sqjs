@@ -38,6 +38,7 @@ var SqEntity = {
 		this.scoreOnDestroy = typeof options.scoreOnDestroy === 'undefined' ? (type === TYPE_ENEMY ? 1 : 0) : options.scoreOnDestroy;
 
 		this.stepAction = [];
+		this.onDestroyAction = [];
 		
 		this.lifetimeTimer = this.lifetime;
 		
@@ -114,12 +115,16 @@ function createPlayer() {
 	return player;
 }
 
-function createEnemy(location, size, options, behaviours) {
+function createEnemy(location, size, options, behaviours, onDestroy) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
 
-	$.each(behaviours, function(){
+	$.each(behaviours || [], function(){
 		e.stepAction.push(this);
+	});
+	
+	$.each(onDestroy || [], function() {
+		e.onDestroyAction.push(this);
 	});
 
 	e.draw = function(){

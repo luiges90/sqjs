@@ -117,8 +117,22 @@ var FPS = 60;
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score += a.scoreOnDestroy + b.scoreOnDestroy;
-			a.destroy();
-			b.destroy();
+			
+			var preventDestroy = false;
+			for (var i = 0; i < a.onDestroyAction.length; ++i) {
+				preventDestroy |= a.onDestroyAction[i].call(a, keys, mouse, player, playerBullet, enemy);
+			}
+			if (!preventDestroy) {
+				a.destroy();
+			}
+			
+			preventDestroy = false;
+			for (var i = 0; i < b.onDestroyAction.length; ++i) {
+				preventDestroy |= b.onDestroyAction[i].call(b, keys, mouse, player, playerBullet, enemy);
+			}
+			if (!preventDestroy) {
+				b.destroy();
+			}
 		}
 
 	}

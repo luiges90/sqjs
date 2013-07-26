@@ -41,7 +41,7 @@ function randomFire(keys, mouse, player, playerBullet, enemy) {
 	var options = $.extend({}, this.bulletOptions);
 	
 	options.color = options.color || this.color;
-	options.scoreOnDestroy = 0;
+	options.scoreOnDestroy = options.scoreOnDestroy || 0;
 	options.lifetime = this.bulletLifetime;
 	
 	if (this.fireCooldownTimer <= 0) {
@@ -50,6 +50,37 @@ function randomFire(keys, mouse, player, playerBullet, enemy) {
 		var position = this.body.GetPosition();
 
 		options.linearVelocity = rtToVector(this.bulletSpeed, randomAngle());
+
+		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
+
+		enemy.push(bullet);
+	}
+
+	this.fireCooldownTimer--;
+}
+
+function aimedFire(keys, mouse, player, playerBullet, enemy) {
+	if (typeof this.fireCooldown === 'undefined' || typeof this.bulletOptions === 'undefined' || typeof this.bulletSize === 'undefined'
+		|| typeof this.bulletBehaviours === 'undefined' || typeof this.bulletSpeed === 'undefined' || typeof this.bulletLifetime === 'undefined') {
+		throw 'fireCooldown and bulletOptions must be defined for randomFire behaviour.';
+	}
+	
+	if (typeof this.fireCooldownTimer === 'undefined') {
+		this.fireCooldownTimer = 0;
+	}
+	
+	var options = $.extend({}, this.bulletOptions);
+	
+	options.color = options.color || this.color;
+	options.scoreOnDestroy = options.scoreOnDestroy || 0;
+	options.lifetime = this.bulletLifetime;
+	
+	if (this.fireCooldownTimer <= 0) {
+		this.fireCooldownTimer = this.fireCooldown;
+
+		var position = this.body.GetPosition();
+
+		options.linearVelocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())));
 
 		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
 

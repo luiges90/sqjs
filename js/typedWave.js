@@ -17,7 +17,7 @@ function typedWave(wave, player, oldEnemy) {
 			color: {h: 0.05, s: 1, l: 0.5, a: 1}
 		}, [alignRotationToMovement, chasePlayer]);
 
-		e.chaseFactor = 0.2;
+		e.chaseFactor = 0.02;
 		return e;
 	};
 

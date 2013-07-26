@@ -12,16 +12,20 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 	var current = this.body.GetAngle();
 	var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
 
-	var cw = target - current;
-	var ccw = current + 2 * Math.PI - target;
+	var diff, direction;
+	var diff = Math.abs(target - current);
+	if (target > current) {
+		direction = diff > Math.PI ? -1 : 1;
+	} else if (target < current) {
+		direction = diff > Math.PI ? 1 : -1;
+	}
 	
-	// TODO determine direction
-	var diff = Math.min(Math.abs(cw), Math.abs(ccw));
-
-	var change = Math.min(diff, this.chaseFactor);
-	change = Math.max(-diff, change);
-	console.log(change);
-
+	var oldMag = this.body.GetLinearVelocity().Length();
+	if (diff < this.chaseFactor) {
+		this.body.SetLinearVelocity(rtToVector(oldMag, target));
+	} else {
+		this.body.SetLinearVelocity(rtToVector(oldMag, current + this.chaseFactor * direction));
+	}
 }
 
 function createPlayerBullet(parent, fireVector) {

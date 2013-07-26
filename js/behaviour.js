@@ -29,26 +29,28 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 }
 
 function randomFire(keys, mouse, player, playerBullet, enemy) {
-	if (typeof this.fireCooldown === 'undefined') {
-		throw 'fireCooldown must be defined for randomFire behaviour.';
+	if (typeof this.fireCooldown === 'undefined' || typeof this.bulletOptions === 'undefined' || typeof this.bulletSize === 'undefined'
+		|| typeof this.bulletBehaviours === 'undefined') {
+		throw 'fireCooldown and bulletOptions must be defined for randomFire behaviour.';
 	}
 	
 	if (typeof this.fireCooldownTimer === 'undefined') {
 		this.fireCooldownTimer = 0;
 	}
-
+	
+	var options = $.extend({}, this.bulletOptions);
+	
+	options.color = options.color || this.color;
+	options.scoreOnDestroy = 0;
+	
 	if (this.fireCooldownTimer <= 0) {
 		this.fireCooldownTimer = this.fireCooldown;
 
 		var position = this.body.GetPosition();
 
-		var fireVector = rtToVector(0.05, randomAngle());
+		options.linearVelocity = rtToVector(options.speed, randomAngle());
 
-		var bullet = createEnemy(this.body.GetPosition(), 0.06, {
-			lifetime: 60,
-			color: this.color,
-			linearVelocity: fireVector
-		}, [alignRotationToMovement]);
+		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
 
 		enemy.push(bullet);
 	}

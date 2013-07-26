@@ -28,12 +28,10 @@ function typedWave(wave, player, oldEnemy) {
 		}, [alignRotationToMovement, randomFire]);
 
 		e.fireCooldown = 100;
-		e.bulletOptions = {
-			speed: 0.05,
-			size: 0.06,
-			lifetime: 60,
-		};
+		e.bulletOptions = {};
 		e.bulletSize = 0.06;
+		e.bulletSpeed = 0.05;
+		e.bulletLifetime = 60;
 		e.bulletBehaviours = [alignRotationToMovement];
 		return e;
 	};

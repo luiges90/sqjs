@@ -30,7 +30,7 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 
 function randomFire(keys, mouse, player, playerBullet, enemy) {
 	if (typeof this.fireCooldown === 'undefined' || typeof this.bulletOptions === 'undefined' || typeof this.bulletSize === 'undefined'
-		|| typeof this.bulletBehaviours === 'undefined') {
+		|| typeof this.bulletBehaviours === 'undefined' || typeof this.bulletSpeed === 'undefined' || typeof this.bulletLifetime === 'undefined') {
 		throw 'fireCooldown and bulletOptions must be defined for randomFire behaviour.';
 	}
 	
@@ -42,13 +42,14 @@ function randomFire(keys, mouse, player, playerBullet, enemy) {
 	
 	options.color = options.color || this.color;
 	options.scoreOnDestroy = 0;
+	options.lifetime = this.bulletLifetime;
 	
 	if (this.fireCooldownTimer <= 0) {
 		this.fireCooldownTimer = this.fireCooldown;
 
 		var position = this.body.GetPosition();
 
-		options.linearVelocity = rtToVector(options.speed, randomAngle());
+		options.linearVelocity = rtToVector(this.bulletSpeed, randomAngle());
 
 		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
 

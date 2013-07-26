@@ -12,7 +12,11 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 	var current = this.body.GetAngle();
 	var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
 
-	var diff = target - current;
+	var cw = target - current;
+	var ccw = current + 2 * Math.PI - target;
+	
+	// TODO determine direction
+	var diff = Math.min(Math.abs(cw), Math.abs(ccw));
 
 	var change = Math.min(diff, this.chaseFactor);
 	change = Math.max(-diff, change);

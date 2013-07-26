@@ -1,13 +1,20 @@
 "use strict";
 
+function requiredFields(fields) {
+	var that = this;
+	$.each(fields, function(){
+		if (typeof that[this] === 'undefined') {
+			throw this + ' is required.';
+		}
+	});
+}
+
 function alignRotationToMovement(keys, mouse, player, playerBullet, enemy){
 	this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
 }
 
 function chasePlayer(keys, mouse, player, playerBullet, enemy) {
-	if (typeof this.chaseFactor === 'undefined') {
-		throw 'chaseFactor must be defined for chasePlayer behaviour.';
-	}
+	requiredFields.call(this, ['chaseFactor']);
 
 	var current = this.body.GetAngle();
 	var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
@@ -29,13 +36,10 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 }
 
 function randomFire(keys, mouse, player, playerBullet, enemy) {
-	if (typeof this.fireCooldown === 'undefined' || typeof this.bulletOptions === 'undefined' || typeof this.bulletSize === 'undefined'
-		|| typeof this.bulletBehaviours === 'undefined' || typeof this.bulletSpeed === 'undefined' || typeof this.bulletLifetime === 'undefined') {
-		throw 'fireCooldown and bulletOptions must be defined for randomFire behaviour.';
-	}
+	requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime']);
 	
 	if (typeof this.fireCooldownTimer === 'undefined') {
-		this.fireCooldownTimer = 0;
+		this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 	}
 	
 	var options = $.extend({}, this.bulletOptions);
@@ -60,13 +64,10 @@ function randomFire(keys, mouse, player, playerBullet, enemy) {
 }
 
 function aimedFire(keys, mouse, player, playerBullet, enemy) {
-	if (typeof this.fireCooldown === 'undefined' || typeof this.bulletOptions === 'undefined' || typeof this.bulletSize === 'undefined'
-		|| typeof this.bulletBehaviours === 'undefined' || typeof this.bulletSpeed === 'undefined' || typeof this.bulletLifetime === 'undefined') {
-		throw 'fireCooldown and bulletOptions must be defined for randomFire behaviour.';
-	}
+	requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime']);
 	
 	if (typeof this.fireCooldownTimer === 'undefined') {
-		this.fireCooldownTimer = 0;
+		this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 	}
 	
 	var options = $.extend({}, this.bulletOptions);

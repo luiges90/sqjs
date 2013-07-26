@@ -29,5 +29,39 @@ function chasePlayer(keys, mouse, player, playerBullet, enemy) {
 }
 
 function randomFire(keys, mouse, player, playerBullet, enemy) {
+	if (typeof this.fireCooldown === 'undefined') {
+		throw 'fireCooldown must be defined for randomFire behaviour.';
+	}
 	
+	if (typeof this.fireCooldownTimer === 'undefined') {
+		this.fireCooldownTimer = 0;
+	}
+
+	if (this.fireCooldownTimer <= 0) {
+		this.fireCooldownTimer = this.fireCooldown;
+
+		var position = this.body.GetPosition();
+
+		var fireVector = rtToVector(0.05, randomAngle());
+
+		var bullet = createEnemyBullet(this, {
+			lifetime: 60,
+			size: 0.06,
+			color: this.color,
+			linearVelocity: fireVector
+		});
+
+		enemy.push(bullet);
+	}
+
+	this.fireCooldownTimer--;
+}
+
+function createEnemyBullet(parent, options) {
+	options = options || {};
+	options.scoreOnDestroy = options.scoreOnDestroy || 0;
+	
+	var behaviours = options.behviours || [alignRotationToMovement];
+	
+	return createEnemy(parent.body.GetPosition(), options.size, options, behaviours);
 }

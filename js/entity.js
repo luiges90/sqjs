@@ -9,9 +9,7 @@ var entityId = 0;
 var SqEntity = {
 
 	init: function(type, position, size, options){
-		var options = options || {};
-
-		var objectClass = type == TYPE_PLAYER ? 'player' : type == TYPE_PLAYER_BULLET ? 'player-bullet' : 'enemy';
+		options = options || {};
 		
 		var shapeOptions = {
 			type: b2Body.b2_dynamicBody,

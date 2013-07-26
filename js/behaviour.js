@@ -44,24 +44,14 @@ function randomFire(keys, mouse, player, playerBullet, enemy) {
 
 		var fireVector = rtToVector(0.05, randomAngle());
 
-		var bullet = createEnemyBullet(this, {
+		var bullet = createEnemy(this.body.GetPosition(), 0.06, {
 			lifetime: 60,
-			size: 0.06,
 			color: this.color,
 			linearVelocity: fireVector
-		});
+		}, [alignRotationToMovement]);
 
 		enemy.push(bullet);
 	}
 
 	this.fireCooldownTimer--;
-}
-
-function createEnemyBullet(parent, options) {
-	options = options || {};
-	options.scoreOnDestroy = options.scoreOnDestroy || 0;
-	
-	var behaviours = options.behviours || [alignRotationToMovement];
-	
-	return createEnemy(parent.body.GetPosition(), options.size, options, behaviours);
 }

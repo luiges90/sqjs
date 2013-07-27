@@ -31,7 +31,6 @@ var SqEntity = {
 		// parameters
 		this.type = type;
 		this.id = entityId;
-		this.force = 0.015;
 		this.lifetime = options.lifetime || -1;
 		this.size = size;
 		this.color = options.color || (type === TYPE_ENEMY ? {h: 0, s: 1, l: 0.5, a: 1} : {h: 0, s: 0, l: 0.75, a: 1});
@@ -88,10 +87,11 @@ function createPlayer() {
 		this.invincibleTimer = FPS * 3;	
 	};
 	
-	player.fireCooldown = 3;
-	
 	player.stepAction.push(moveByWASD);
 	player.stepAction.push(fireByLeftMouse);
+	
+	player.fireCooldown = 3;
+	player.movingForce = 0.015;
 	
 	player.draw = function() {
 		var canvas = document.getElementById('scene').getContext('2d');

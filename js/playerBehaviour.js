@@ -27,8 +27,10 @@ function createPlayerBullet(parent, fireVector) {
 }
 
 function moveByWASD(keys, mouse, player, playerBullet, enemy) {
+	requiredFields.call(this, ['movingForce']);
+
 	var body = this.body;
-	var force = this.force;
+	var force = this.movingForce;
 	for (var i in keys){
 		switch (i) {
 			case '38': // up key

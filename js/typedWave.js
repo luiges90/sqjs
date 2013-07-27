@@ -1,6 +1,6 @@
 "use strict";
 
-function generateWave(wave, player, oldEnemy) {
+function generateWave(enemy, wave, player, oldEnemy) {
 
 	var getEnemyPosition = function() {
 		return randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1);
@@ -39,6 +39,7 @@ function generateWave(wave, player, oldEnemy) {
 				color: parent.color,
 				scoreOnDestroy: 0,
 				lifetime: 60,
+				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
 		
@@ -60,6 +61,7 @@ function generateWave(wave, player, oldEnemy) {
 				color: parent.color,
 				scoreOnDestroy: 0,
 				lifetime: 60,
+				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
 		
@@ -92,6 +94,7 @@ function generateWave(wave, player, oldEnemy) {
 				color: parent.color,
 				scoreOnDestroy: 0,
 				lifetime: 60,
+				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
 		e.hp = 3;
@@ -145,7 +148,6 @@ function generateWave(wave, player, oldEnemy) {
 	waveData[13] = [fast, fast, fast, small, small, chasing, chasing, chasing];
 	waveData[14] = [].pushMul(20, chasing);
 	
-	var enemy = [];
 	$.each(waveData[(wave - 1) % waveData.length], function(){
 		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) { 
 			enemy.push(this());

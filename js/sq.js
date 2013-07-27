@@ -138,9 +138,16 @@ var FPS = 60;
 	}
 	
 	function checkCompleted() {
-		if (enemy.length <= 0){
+		var completed = true;
+		$.each(enemy, function(){
+			if (this.preventNextWave) {
+				completed = false;
+			}
+		});
+	
+		if (completed){
 			wave++;
-			enemy = generateWave(wave, player, oldEnemy);
+			enemy = generateWave(enemy, wave, player, oldEnemy);
 			oldEnemy = enemy.slice();
 		}
 	}
@@ -215,7 +222,7 @@ var FPS = 60;
 		
 		initControl();
 		
-		enemy = generateWave(wave, player, []);
+		enemy = generateWave(enemy, wave, player, oldEnemy);
 		oldEnemy = enemy.slice();
 
 		animate();

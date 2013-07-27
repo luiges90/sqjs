@@ -105,7 +105,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var large = function(){
 		var e = createEnemy(getEnemyPosition(), 0.4, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 40, s: 1, l: 0.55, a: 1}
+			color: {h: 0, s: 1, l: 0.6, a: 1}
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
 		
 		e.hp = 5;
@@ -116,7 +116,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var small = function(){
 		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 50, s: 1, l: 0.5, a: 1}
+			color: {h: 0, s: 1, l: 0.45, a: 1}
 		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
@@ -125,9 +125,30 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var fast = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(9, randomAngle()),
-			color: {h: 60, s: 1, l: 0.5, a: 1}
+			color: {h: 0, s: 0.9, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement]);
 
+		return e;
+	};
+	
+	var counterAttack = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 40, s: 1, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement], [], [Behaviours.counterAttack]);
+
+		e.aimError = 0;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 100,
+				preventNextWave: false,
+			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
+		};
+		
 		return e;
 	};
 
@@ -147,6 +168,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[12] = [large, large, large, hp5, hp5, hp3AimedFiring, hp3AimedFiring, hp3AimedFiring];
 	waveData[13] = [fast, fast, fast, small, small, chasing, chasing, chasing];
 	waveData[14] = [].pushMul(20, chasing);
+	waveData[15] = [].pushMul(5, counterAttack);
 	
 	$.each(waveData[(wave - 1) % waveData.length], function(){
 		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) { 

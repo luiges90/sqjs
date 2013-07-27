@@ -53,6 +53,9 @@ var FPS = 60;
 
 		for (i = 0; i < playerBullet.length; ++i) {
 			if (playerBullet[i].isDestroyed()) {
+				for (var j = 0; j < playerBullet[i].postDestroyAction.length; ++j) {
+					playerBullet[i].postDestroyAction[j].call(playerBullet[i], keys, mouse, player, playerBullet, enemy);
+				}
 				world.DestroyBody(playerBullet[i].body);
 				playerBullet.splice(i--, 1);
 			} else {
@@ -63,6 +66,9 @@ var FPS = 60;
 		
 		for (i = 0; i < enemy.length; ++i) {
 			if (enemy[i].isDestroyed()) {
+				for (var j = 0; j < enemy[i].postDestroyAction.length; ++j) {
+					enemy[i].postDestroyAction[j].call(enemy[i], keys, mouse, player, playerBullet, enemy);
+				}
 				world.DestroyBody(enemy[i].body);
 				enemy.splice(i--, 1);
 			} else {
@@ -117,7 +123,7 @@ var FPS = 60;
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score += a.scoreOnDestroy + b.scoreOnDestroy;
-			
+
 			var preventDestroy = false;
 			for (var i = 0; i < a.onDestroyAction.length; ++i) {
 				preventDestroy |= a.onDestroyAction[i].call(a, keys, mouse, player, playerBullet, enemy);

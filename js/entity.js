@@ -39,6 +39,7 @@ var SqEntity = {
 
 		this.stepAction = [];
 		this.onDestroyAction = [];
+		this.postDestroyAction = [];
 		
 		this.lifetimeTimer = this.lifetime;
 		
@@ -116,7 +117,7 @@ function createPlayer() {
 	return player;
 }
 
-function createEnemy(location, size, options, behaviours, onDestroy) {
+function createEnemy(location, size, options, behaviours, onDestroy, postDestroy) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
 
@@ -126,6 +127,10 @@ function createEnemy(location, size, options, behaviours, onDestroy) {
 	
 	$.each(onDestroy || [], function() {
 		e.onDestroyAction.push(this);
+	});
+	
+	$.each(postDestroy || [], function() {
+		e.postDestroyAction.push(this);
 	});
 
 	e.draw = function(){

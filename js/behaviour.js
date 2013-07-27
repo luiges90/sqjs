@@ -95,6 +95,16 @@ var Behaviours = (function() {
 			return true;
 		},
 		
+		counterAttack: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['bulletSpeed', 'createBullet', 'aimError']);
+
+			var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
+
+			var bullet = this.createBullet(this, velocity);
+
+			enemy.push(bullet);
+		},
+		
 	};
 
 })();

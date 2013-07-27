@@ -11,7 +11,7 @@ var FPS = 60;
 	var enemy = [];
 	var oldEnemy = [];
 	
-	var lives = 5;
+	var lives = 99999;
 	var score = 0;
 	var wave = 1;
 	
@@ -52,10 +52,14 @@ var FPS = 60;
 		}
 
 		for (i = 0; i < playerBullet.length; ++i) {
-			if (playerBullet[i].isDestroyed()) {
-				for (var j = 0; j < playerBullet[i].postDestroyAction.length; ++j) {
-					playerBullet[i].postDestroyAction[j].call(playerBullet[i], keys, mouse, player, playerBullet, enemy);
+			if (playerBullet[i].justHit) {
+				for (var j = 0; j < playerBullet[i].postHitAction.length; ++j) {
+					playerBullet[i].postHitAction[j].call(playerBullet[i], keys, mouse, player, playerBullet, enemy);
 				}
+				playerBullet[i].justHit = false;
+			}
+		
+			if (playerBullet[i].isDestroyed()) {
 				world.DestroyBody(playerBullet[i].body);
 				playerBullet.splice(i--, 1);
 			} else {
@@ -65,10 +69,14 @@ var FPS = 60;
 		}
 		
 		for (i = 0; i < enemy.length; ++i) {
-			if (enemy[i].isDestroyed()) {
-				for (var j = 0; j < enemy[i].postDestroyAction.length; ++j) {
-					enemy[i].postDestroyAction[j].call(enemy[i], keys, mouse, player, playerBullet, enemy);
+			if (enemy[i].justHit){
+				for (var j = 0; j < enemy[i].postHitAction.length; ++j) {
+					enemy[i].postHitAction[j].call(enemy[i], keys, mouse, player, playerBullet, enemy);
 				}
+				enemy[i].justHit = false;
+			}
+		
+			if (enemy[i].isDestroyed()) {
 				world.DestroyBody(enemy[i].body);
 				enemy.splice(i--, 1);
 			} else {
@@ -123,18 +131,20 @@ var FPS = 60;
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score += a.scoreOnDestroy + b.scoreOnDestroy;
+			a.justHit = true;
+			b.justHit = true;
 
 			var preventDestroy = false;
-			for (var i = 0; i < a.onDestroyAction.length; ++i) {
-				preventDestroy |= a.onDestroyAction[i].call(a, keys, mouse, player, playerBullet, enemy);
+			for (var i = 0; i < a.onHitAction.length; ++i) {
+				preventDestroy |= a.onHitAction[i].call(a, keys, mouse, player, playerBullet, enemy);
 			}
 			if (!preventDestroy) {
 				a.destroy();
 			}
 			
 			preventDestroy = false;
-			for (var i = 0; i < b.onDestroyAction.length; ++i) {
-				preventDestroy |= b.onDestroyAction[i].call(b, keys, mouse, player, playerBullet, enemy);
+			for (var i = 0; i < b.onHitAction.length; ++i) {
+				preventDestroy |= b.onHitAction[i].call(b, keys, mouse, player, playerBullet, enemy);
 			}
 			if (!preventDestroy) {
 				b.destroy();

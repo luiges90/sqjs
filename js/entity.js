@@ -57,10 +57,11 @@ var SqEntity = (function(){
 			this.preventNextWave = typeof options.preventNextWave === 'undefined' ? (type === TYPE_ENEMY) : options.preventNextWave;
 
 			this.stepAction = [];
-			this.onDestroyAction = [];
-			this.postDestroyAction = [];
+			this.onHitAction = [];
+			this.postHitAction = [];
 			
 			this.lifetimeTimer = this.lifetime;
+			this.justHit = false;
 			
 			this.destroyed = false;
 
@@ -144,13 +145,13 @@ function createPlayer() {
  * @param size Size of enemy
  * @param options An additional option object for SqEntity.init
  * @param behaviours Behaviours (defined in behaviour.js) to be added and be run in every time step.
- * @param onDestroy Behaviours to be added and run when the enemy is hit. If the behaviour returns truthy value, the destruction of the enemy will be stopped.
+ * @param onHit Behaviours to be added and run when the enemy is hit. If the behaviour returns truthy value, the destruction of the enemy will be stopped.
  *                  Note: this is called inside Box2D collision BeginContact event, and hence you may *not* create new entites nor toy with Box2D world inside
- *                  this behaviour. Use postDestroy instead.
- * @param postDestroy Behaviours to be added and run after the enemy is destroyed and going to be removed from the world. You may create new entities here.
- *                    It is not possible to stop destruction here. Use onDestroy instead.
+ *                  this behaviour. Use postHit instead.
+ * @param postHit Behaviours to be added and run after the enemy is hit. You may create new entities here.
+ *                    It is not possible to stop destruction here. Use onHit instead.
  */
-function createEnemy(location, size, options, behaviours, onDestroy, postDestroy) {
+function createEnemy(location, size, options, behaviours, onHit, postHit) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
 
@@ -158,12 +159,12 @@ function createEnemy(location, size, options, behaviours, onDestroy, postDestroy
 		e.stepAction.push(this);
 	});
 	
-	$.each(onDestroy || [], function() {
-		e.onDestroyAction.push(this);
+	$.each(onHit || [], function() {
+		e.onHitAction.push(this);
 	});
 	
-	$.each(postDestroy || [], function() {
-		e.postDestroyAction.push(this);
+	$.each(postHit || [], function() {
+		e.postHitAction.push(this);
 	});
 
 	e.draw = function(){

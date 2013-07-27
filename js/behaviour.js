@@ -40,27 +40,19 @@ var Behaviours = (function() {
 		},
 
 		randomFire: function(keys, mouse, player, playerBullet, enemy) {
-			requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime']);
+			requiredFields.call(this, ['fireCooldown', 'bulletSpeed', 'createBullet']);
 			
 			if (typeof this.fireCooldownTimer === 'undefined') {
 				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 			}
 			
-			var options = $.extend({}, this.bulletOptions);
-			
-			options.color = options.color || this.color;
-			options.scoreOnDestroy = options.scoreOnDestroy || 0;
-			options.lifetime = this.bulletLifetime;
-			
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
 
-				var position = this.body.GetPosition();
+				var velocity = rtToVector(this.bulletSpeed, randomAngle());
 
-				options.linearVelocity = rtToVector(this.bulletSpeed, randomAngle());
-
-				var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
-
+				var bullet = this.createBullet(this, velocity);
+				
 				enemy.push(bullet);
 			}
 
@@ -68,26 +60,18 @@ var Behaviours = (function() {
 		},
 
 		aimedFire: function(keys, mouse, player, playerBullet, enemy) {
-			requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime', 'aimError']);
+			requiredFields.call(this, ['fireCooldown', 'bulletSpeed', 'createBullet', 'aimError']);
 			
 			if (typeof this.fireCooldownTimer === 'undefined') {
 				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 			}
-			
-			var options = $.extend({}, this.bulletOptions);
-			
-			options.color = options.color || this.color;
-			options.scoreOnDestroy = options.scoreOnDestroy || 0;
-			options.lifetime = this.bulletLifetime;
-			
+
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
 
-				var position = this.body.GetPosition();
+				var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
-				options.linearVelocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
-
-				var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
+				var bullet = this.createBullet(this, velocity);
 
 				enemy.push(bullet);
 			}
@@ -106,10 +90,9 @@ var Behaviours = (function() {
 			
 			return this.currentHp > 0;
 		},
-
-		counterAttack: function(keys, mouse, player, playerBullet, enemy) {
-			requiredFields.call(this, ['caBulletOptions', 'caBulletSize', 'caBulletBehaviours', 'caBulletSpeed', 'caBulletLifetime']);
-
+		
+		indestructible: function(keys, mouse, player, playerBullet, enemy) {
+			return true;
 		},
 		
 	};

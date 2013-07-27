@@ -32,11 +32,16 @@ function generateWave(wave, player, oldEnemy) {
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 100;
-		e.bulletOptions = {};
-		e.bulletSize = 0.06;
 		e.bulletSpeed = 5;
-		e.bulletLifetime = 60;
-		e.bulletBehaviours = [Behaviours.alignRotationToMovement];
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+			}, [Behaviours.alignRotationToMovement]);
+		};
+		
 		return e;
 	};
 	
@@ -47,12 +52,17 @@ function generateWave(wave, player, oldEnemy) {
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire]);
 
 		e.fireCooldown = 100;
-		e.bulletOptions = {};
-		e.bulletSize = 0.06;
-		e.bulletSpeed = 5;
-		e.bulletLifetime = 60;
 		e.aimError = deg2rad(10);
-		e.bulletBehaviours = [Behaviours.alignRotationToMovement];
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+			}, [Behaviours.alignRotationToMovement]);
+		};
+		
 		return e;
 	};
 	
@@ -74,13 +84,18 @@ function generateWave(wave, player, oldEnemy) {
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
 
 		e.fireCooldown = 100;
-		e.bulletOptions = {};
-		e.bulletSize = 0.06;
+		e.aimError = 0;
 		e.bulletSpeed = 5;
-		e.bulletLifetime = 60;
-		e.aimError = deg2rad(0);
-		e.bulletBehaviours = [Behaviours.alignRotationToMovement];
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+			}, [Behaviours.alignRotationToMovement]);
+		};
 		e.hp = 3;
+		
 		return e;
 	};
 	

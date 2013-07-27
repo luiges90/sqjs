@@ -140,7 +140,7 @@ var FPS = 60;
 	function checkCompleted() {
 		if (enemy.length <= 0){
 			wave++;
-			enemy = waveGenerator(wave, player, oldEnemy);
+			enemy = generateWave(wave, player, oldEnemy);
 			oldEnemy = enemy.slice();
 		}
 	}
@@ -215,7 +215,7 @@ var FPS = 60;
 		
 		initControl();
 		
-		enemy = waveGenerator(wave, player);
+		enemy = generateWave(wave, player, []);
 		oldEnemy = enemy.slice();
 
 		animate();

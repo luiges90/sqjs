@@ -1,104 +1,117 @@
 "use strict";
 
-function requiredFields(fields) {
-	var that = this;
-	$.each(fields, function(){
-		if (typeof that[this] === 'undefined') {
-			throw this + ' is required.';
-		}
-	});
-}
+var Behaviours = (function() {
 
-function alignRotationToMovement(keys, mouse, player, playerBullet, enemy){
-	this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
-}
+	function requiredFields(fields) {
+		var that = this;
+		$.each(fields, function(){
+			if (typeof that[this] === 'undefined') {
+				throw this + ' is required.';
+			}
+		});
+	};
 
-function chasePlayer(keys, mouse, player, playerBullet, enemy) {
-	requiredFields.call(this, ['chaseFactor']);
+	return {
 
-	var current = this.body.GetAngle();
-	var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
+		alignRotationToMovement: function(keys, mouse, player, playerBullet, enemy){
+			this.body.SetAngle(vectorAngle(this.body.GetLinearVelocity()));
+		},
 
-	var diff, direction;
-	var diff = Math.abs(target - current);
-	if (target > current) {
-		direction = diff > Math.PI ? -1 : 1;
-	} else if (target < current) {
-		direction = diff > Math.PI ? 1 : -1;
-	}
-	
-	var oldMag = this.body.GetLinearVelocity().Length();
-	if (diff < this.chaseFactor) {
-		this.body.SetLinearVelocity(rtToVector(oldMag, target));
-	} else {
-		this.body.SetLinearVelocity(rtToVector(oldMag, current + this.chaseFactor * direction));
-	}
-}
+		chasePlayer: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['chaseFactor']);
 
-function randomFire(keys, mouse, player, playerBullet, enemy) {
-	requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime']);
-	
-	if (typeof this.fireCooldownTimer === 'undefined') {
-		this.fireCooldownTimer = randBetween(0, this.fireCooldown);
-	}
-	
-	var options = $.extend({}, this.bulletOptions);
-	
-	options.color = options.color || this.color;
-	options.scoreOnDestroy = options.scoreOnDestroy || 0;
-	options.lifetime = this.bulletLifetime;
-	
-	if (this.fireCooldownTimer <= 0) {
-		this.fireCooldownTimer = this.fireCooldown;
+			var current = this.body.GetAngle();
+			var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
 
-		var position = this.body.GetPosition();
+			var diff, direction;
+			var diff = Math.abs(target - current);
+			if (target > current) {
+				direction = diff > Math.PI ? -1 : 1;
+			} else if (target < current) {
+				direction = diff > Math.PI ? 1 : -1;
+			}
+			
+			var oldMag = this.body.GetLinearVelocity().Length();
+			if (diff < this.chaseFactor) {
+				this.body.SetLinearVelocity(rtToVector(oldMag, target));
+			} else {
+				this.body.SetLinearVelocity(rtToVector(oldMag, current + this.chaseFactor * direction));
+			}
+		},
 
-		options.linearVelocity = rtToVector(this.bulletSpeed, randomAngle());
+		randomFire: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime']);
+			
+			if (typeof this.fireCooldownTimer === 'undefined') {
+				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
+			}
+			
+			var options = $.extend({}, this.bulletOptions);
+			
+			options.color = options.color || this.color;
+			options.scoreOnDestroy = options.scoreOnDestroy || 0;
+			options.lifetime = this.bulletLifetime;
+			
+			if (this.fireCooldownTimer <= 0) {
+				this.fireCooldownTimer = this.fireCooldown;
 
-		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
+				var position = this.body.GetPosition();
 
-		enemy.push(bullet);
-	}
+				options.linearVelocity = rtToVector(this.bulletSpeed, randomAngle());
 
-	this.fireCooldownTimer--;
-}
+				var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
 
-function aimedFire(keys, mouse, player, playerBullet, enemy) {
-	requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime', 'aimError']);
-	
-	if (typeof this.fireCooldownTimer === 'undefined') {
-		this.fireCooldownTimer = randBetween(0, this.fireCooldown);
-	}
-	
-	var options = $.extend({}, this.bulletOptions);
-	
-	options.color = options.color || this.color;
-	options.scoreOnDestroy = options.scoreOnDestroy || 0;
-	options.lifetime = this.bulletLifetime;
-	
-	if (this.fireCooldownTimer <= 0) {
-		this.fireCooldownTimer = this.fireCooldown;
+				enemy.push(bullet);
+			}
 
-		var position = this.body.GetPosition();
+			this.fireCooldownTimer--;
+		},
 
-		options.linearVelocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
+		aimedFire: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['fireCooldown', 'bulletOptions', 'bulletSize', 'bulletBehaviours', 'bulletSpeed', 'bulletLifetime', 'aimError']);
+			
+			if (typeof this.fireCooldownTimer === 'undefined') {
+				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
+			}
+			
+			var options = $.extend({}, this.bulletOptions);
+			
+			options.color = options.color || this.color;
+			options.scoreOnDestroy = options.scoreOnDestroy || 0;
+			options.lifetime = this.bulletLifetime;
+			
+			if (this.fireCooldownTimer <= 0) {
+				this.fireCooldownTimer = this.fireCooldown;
 
-		var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
+				var position = this.body.GetPosition();
 
-		enemy.push(bullet);
-	}
+				options.linearVelocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
-	this.fireCooldownTimer--;
-}
+				var bullet = createEnemy(this.body.GetPosition(), this.bulletSize, options, this.bulletBehaviours);
 
-function hp(keys, mouse, player, playerBullet, enemy) {
-	requiredFields.call(this, ['hp']);
-	
-	if (typeof this.currentHp === 'undefined') {
-		this.currentHp = this.hp;
-	}
-	
-	this.currentHp--;
-	
-	return this.currentHp > 0;
-}
+				enemy.push(bullet);
+			}
+
+			this.fireCooldownTimer--;
+		},
+
+		hp: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['hp']);
+			
+			if (typeof this.currentHp === 'undefined') {
+				this.currentHp = this.hp;
+			}
+			
+			this.currentHp--;
+			
+			return this.currentHp > 0;
+		},
+
+		counterAttack: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['caBulletOptions', 'caBulletSize', 'caBulletBehaviours', 'caBulletSpeed', 'caBulletLifetime']);
+
+		},
+		
+	};
+
+})();

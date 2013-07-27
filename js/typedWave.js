@@ -1,46 +1,50 @@
 "use strict";
 
-function typedWave(wave, player, oldEnemy) {
+function generateWave(wave, player, oldEnemy) {
+
+	var getEnemyPosition = function() {
+		return randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1);
+	};
 
 	var simple = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 0, s: 1, l: 0.5, a: 1}
-		}, [alignRotationToMovement]);
+		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
 	};
 
 	var chasing = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 10, s: 1, l: 0.5, a: 1}
-		}, [alignRotationToMovement, chasePlayer]);
+		}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer]);
 
 		e.chaseFactor = 0.02;
 		return e;
 	};
 	
 	var randomFiring = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 20, s: 1, l: 0.5, a: 1}
-		}, [alignRotationToMovement, randomFire]);
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 100;
 		e.bulletOptions = {};
 		e.bulletSize = 0.06;
 		e.bulletSpeed = 5;
 		e.bulletLifetime = 60;
-		e.bulletBehaviours = [alignRotationToMovement];
+		e.bulletBehaviours = [Behaviours.alignRotationToMovement];
 		return e;
 	};
 	
 	var aimedFiring = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 30, s: 1, l: 0.5, a: 1}
-		}, [alignRotationToMovement, aimedFire]);
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire]);
 
 		e.fireCooldown = 100;
 		e.bulletOptions = {};
@@ -48,15 +52,15 @@ function typedWave(wave, player, oldEnemy) {
 		e.bulletSpeed = 5;
 		e.bulletLifetime = 60;
 		e.aimError = deg2rad(10);
-		e.bulletBehaviours = [alignRotationToMovement];
+		e.bulletBehaviours = [Behaviours.alignRotationToMovement];
 		return e;
 	};
 	
 	var hp5 = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 0, s: 1, l: 0.55, a: 1}
-		}, [alignRotationToMovement], [hp]);
+		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
 		
 		e.hp = 5;
 		
@@ -64,10 +68,10 @@ function typedWave(wave, player, oldEnemy) {
 	};
 	
 	var hp3AimedFiring = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 30, s: 1, l: 0.55, a: 1}
-		}, [alignRotationToMovement, aimedFire], [hp]);
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
 
 		e.fireCooldown = 100;
 		e.bulletOptions = {};
@@ -75,16 +79,16 @@ function typedWave(wave, player, oldEnemy) {
 		e.bulletSpeed = 5;
 		e.bulletLifetime = 60;
 		e.aimError = deg2rad(0);
-		e.bulletBehaviours = [alignRotationToMovement];
+		e.bulletBehaviours = [Behaviours.alignRotationToMovement];
 		e.hp = 3;
 		return e;
 	};
 	
 	var large = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.4, {
+		var e = createEnemy(getEnemyPosition(), 0.4, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 40, s: 1, l: 0.55, a: 1}
-		}, [alignRotationToMovement], [hp]);
+		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
 		
 		e.hp = 5;
 		
@@ -92,19 +96,19 @@ function typedWave(wave, player, oldEnemy) {
 	};
 	
 	var small = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.04, {
+		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 50, s: 1, l: 0.5, a: 1}
-		}, [alignRotationToMovement]);
+		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
 	};
 	
 	var fast = function(){
-		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(9, randomAngle()),
 			color: {h: 60, s: 1, l: 0.5, a: 1}
-		}, [alignRotationToMovement]);
+		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
 	};

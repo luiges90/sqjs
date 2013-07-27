@@ -87,8 +87,8 @@ function createPlayer() {
 		this.invincibleTimer = FPS * 3;	
 	};
 	
-	player.stepAction.push(moveByWASD);
-	player.stepAction.push(fireByLeftMouse);
+	player.stepAction.push(PlayerBehaviours.moveByWASD);
+	player.stepAction.push(PlayerBehaviours.fireByLeftMouse);
 	
 	player.fireCooldown = 3;
 	player.movingForce = 0.015;

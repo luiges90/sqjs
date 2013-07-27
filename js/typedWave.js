@@ -160,21 +160,21 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	};
 
 	var waveData = [];
-	waveData[0] = [simple, simple, simple];
-	waveData[1] = [simple, chasing, simple, chasing];
-	waveData[2] = [randomFiring, randomFiring, randomFiring];
-	waveData[3] = [simple, simple, chasing, chasing, randomFiring, randomFiring];
-	waveData[4] = [aimedFiring, aimedFiring, aimedFiring];
-	waveData[5] = [chasing, chasing, randomFiring, randomFiring, aimedFiring, aimedFiring];
-	waveData[6] = [hp5, hp5, hp5, chasing, chasing, chasing, chasing];
-	waveData[7] = [hp5, hp5, hp5, aimedFiring, randomFiring, aimedFiring, randomFiring];
-	waveData[8] = [hp3AimedFiring, hp3AimedFiring, hp3AimedFiring, hp3AimedFiring];
-	waveData[9] = [hp3AimedFiring, hp3AimedFiring, hp3AimedFiring, randomFiring, randomFiring, randomFiring, randomFiring];
-	waveData[10] = [large, large, large, small, small, small];
-	waveData[11] = [fast, fast, fast, large, large, small, small];
-	waveData[12] = [large, large, large, hp5, hp5, hp3AimedFiring, hp3AimedFiring, hp3AimedFiring];
-	waveData[13] = [fast, fast, fast, small, small, chasing, chasing, chasing];
-	waveData[14] = [].pushMul(20, chasing);
+	waveData[0] = [].pushMul(3, simple);
+	waveData[1] = [].pushMul(2, simple).pushMul(2, chasing);
+	waveData[2] = [].pushMul(3, randomFiring);
+	waveData[3] = [].pushMul(2, simple).pushMul(2, chasing).pushMul(2, randomFiring);
+	waveData[4] = [].pushMul(3, aimedFiring);
+	waveData[5] = [].pushMul(2, chasing).pushMul(2, randomFiring).pushMul(2, aimedFiring);
+	waveData[6] = [].pushMul(5, hp5);
+	waveData[7] = [].pushMul(3, hp5).pushMul(3, chasing).pushMul(2, aimedFiring);
+	waveData[8] = [].pushMul(5, hp3AimedFiring);
+	waveData[9] = [].pushMul(3, hp3AimedFiring).pushMul(4, randomFiring);
+	waveData[10] = [].pushMul(3, large).pushMul(3, small);
+	waveData[11] = [].pushMul(3, fast).pushMul(2, large).pushMul(2, small);
+	waveData[12] = [].pushMul(3, large).pushMul(2, hp5).pushMul(3, hp3AimedFiring);
+	waveData[13] = [].pushMul(3, fast).pushMul(2, small).pushMul(3, chasing);
+	waveData[14] = [].pushMul(15, chasing);
 	waveData[15] = [].pushMul(5, counterAttack);
 	
 	$.each(waveData[(wave - 1) % waveData.length], function(){

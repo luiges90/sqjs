@@ -62,20 +62,39 @@ function typedWave(wave, player, oldEnemy) {
 		
 		return e;
 	};
+	
+	var hp5AimedFiring = function(){
+		var e = createEnemy(randomLocationAvoidRadius(-3 + 0.24, 3 - 0.24, -3 + 0.24, 3 - 0.24, player.body.GetPosition(), 1), 0.12, {
+			linearVelocity: rtToVector(0.15, randomAngle()),
+			color: {h: 350, s: 1, l: 0.55, a: 1}
+		}, [alignRotationToMovement, aimedFire], [hp]);
+
+		e.fireCooldown = 100;
+		e.bulletOptions = {};
+		e.bulletSize = 0.06;
+		e.bulletSpeed = 0.05;
+		e.bulletLifetime = 60;
+		e.aimError = deg2rad(10);
+		e.bulletBehaviours = [alignRotationToMovement];
+		e.hp = 5;
+		return e;
+	};
 
 	var waveData = [];
-	waveData[1] = [simple, simple, simple];
-	waveData[2] = [simple, chasing, simple, chasing];
-	waveData[3] = [randomFiring, randomFiring, randomFiring];
-	waveData[4] = [simple, simple, chasing, chasing, randomFiring, randomFiring];
-	waveData[5] = [aimedFiring, aimedFiring, aimedFiring];
-	waveData[6] = [chasing, chasing, randomFiring, randomFiring, aimedFiring, aimedFiring];
-	waveData[7] = [hp5, hp5, hp5, chasing, chasing, chasing, chasing];
-	waveData[8] = [hp5, hp5, hp5, aimedFiring, randomFiring, aimedFiring, randomFiring];
+	waveData[0] = [simple, simple, simple];
+	waveData[1] = [simple, chasing, simple, chasing];
+	waveData[2] = [randomFiring, randomFiring, randomFiring];
+	waveData[3] = [simple, simple, chasing, chasing, randomFiring, randomFiring];
+	waveData[4] = [aimedFiring, aimedFiring, aimedFiring];
+	waveData[5] = [chasing, chasing, randomFiring, randomFiring, aimedFiring, aimedFiring];
+	waveData[6] = [hp5, hp5, hp5, chasing, chasing, chasing, chasing];
+	waveData[7] = [hp5, hp5, hp5, aimedFiring, randomFiring, aimedFiring, randomFiring];
+	waveData[8] = [hp5AimedFiring, hp5AimedFiring, hp5AimedFiring, hp5AimedFiring];
+	waveData[9] = [hp5AimedFiring, hp5AimedFiring, randomFiring, randomFiring, randomFiring, aimedFiring, aimedFiring, aimedFiring];
 	
 	var enemy = [];
-	$.each(waveData[wave % waveData.length], function(){
-		for (var i = 0; i < (wave / waveData.length) | 0; i++) { // float to int
+	$.each(waveData[(wave - 1) % waveData.length], function(){
+		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) { 
 			enemy.push(this());
 		}
 	});

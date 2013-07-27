@@ -139,7 +139,7 @@ function createPlayer() {
  * Create an enemy
  * @param location where to place the enemy
  * @param size Size of enemy
- * @param options An additional option array for SqEntity.init
+ * @param options An additional option object for SqEntity.init
  * @param behaviours Behaviours (defined in behaviour.js) to be added and be run in every time step.
  * @param onDestroy Behaviours to be added and run when the enemy is hit. If the behaviour returns truthy value, the destruction of the enemy will be stopped.
  *                  Note: this is called inside Box2D collision BeginContact event, and hence you may *not* create new entites nor toy with Box2D world inside

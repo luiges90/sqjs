@@ -75,7 +75,7 @@ function typedWave(wave, player, oldEnemy) {
 	
 	var enemy = [];
 	$.each(waveData[wave % waveData.length], function(){
-		for (var i = 0; i < ~~(wave / waveData.length + 1); i++) { // float to int
+		for (var i = 0; i < (wave / waveData.length) | 0; i++) { // float to int
 			enemy.push(this());
 		}
 	});

@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * Behaviours for player. 
+ * See behaviour.js for details.
+ */
+
 var PlayerBehaviours = (function(){
 
 	function createPlayerBullet(parent, fireVector) {

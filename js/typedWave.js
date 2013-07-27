@@ -1,5 +1,12 @@
 "use strict";
 
+/**
+ * Wave generator
+ * @param enemy Enemy array left in the field. Add new enemies to this array.
+ * @param wave Wave number
+ * @param player The player object
+ * @param oldEnemy All generated enemies of last wave.
+ */
 function generateWave(enemy, wave, player, oldEnemy) {
 
 	var getEnemyPosition = function() {

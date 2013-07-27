@@ -6,8 +6,26 @@ var TYPE_PLAYER_BULLET = 2;
 
 var entityId = 0;
 
+/** 
+ * SqEntity Prototype.
+ * use Object.create to create a new SqEntity, and then call init on the newly created object to initialize the entity.
+ */
 var SqEntity = {
 
+	/**
+	 * Initializes an SqEntity
+	 * @param type Type of enemy, either TYPE_PLAYER, TYPE_ENEMY or TYPE_PLAYER_BULLET
+	 * @param position Set position of the entity
+	 * @param size Set Size of the entity
+	 * @param options Any options to create the entity. keys are defined as follows
+	 *                lifetime       : Lifetime of the body. Infinite lifetime if set to -1, which is the default.
+	 *                color          : Rendered color of the body, as an object containing h, s, l and a values. h ranges from 0 to 360 while other ranges 
+	 *                                 from 0 to 1
+	 *                linearDamping  : Box2D Linear Damping of the entity
+	 *                linearVelocity : Initial velocity of the entity
+	 *                scoreOnDestroy : player's score when it is destroyed
+	 *                preventNextWave: If this entity is not destroyed, player is not allowed to go to next wave.           
+	 */
 	init: function(type, position, size, options){
 		options = options || {};
 		
@@ -117,6 +135,18 @@ function createPlayer() {
 	return player;
 }
 
+/**
+ * Create an enemy
+ * @param location where to place the enemy
+ * @param size Size of enemy
+ * @param options An additional option array for SqEntity.init
+ * @param behaviours Behaviours (defined in behaviour.js) to be added and be run in every time step.
+ * @param onDestroy Behaviours to be added and run when the enemy is hit. If the behaviour returns truthy value, the destruction of the enemy will be stopped.
+ *                  Note: this is called inside Box2D collision BeginContact event, and hence you may *not* create new entites nor toy with Box2D world inside
+ *                  this behaviour. Use postDestroy instead.
+ * @param postDestroy Behaviours to be added and run after the enemy is destroyed and going to be removed from the world. You may create new entities here.
+ *                    It is not possible to stop destruction here. Use onDestroy instead.
+ */
 function createEnemy(location, size, options, behaviours, onDestroy, postDestroy) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);

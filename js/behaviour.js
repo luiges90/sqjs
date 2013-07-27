@@ -1,5 +1,18 @@
 "use strict";
 
+/**
+ * Behaviours for enemies. 
+ * To add new behaviours: put inside the returned object. Behaviours have the following signature
+ *     function(keys, mouse, player, playerBullet, enemy)
+ * @param keys Keys being pressed by the player, as keyCodes
+ * @param mouse Player's mouse status. Whether mouse[1] is defined says if left mouse is being held. mouse.position stores current mouse position as X,Y
+ *              coordinates
+ * @param player Player as SqEntity in the game world
+ * @param playerBullet Array of player bullets as SqEntity in the game world
+ * @param enemy Array of enemies as SqEntity in the game world
+ * @returns If truthy value is returned and the behaviour is used as onDestroy behaviour, it will stop the destruction.
+ */
+
 var Behaviours = (function() {
 
 	function requiredFields(fields) {

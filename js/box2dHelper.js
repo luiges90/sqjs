@@ -20,6 +20,19 @@ function randIntBetween(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * Convinent function to add a shape, because it is so clumsy to add a object into box2D world.
+ * @param world The Box2D World
+ * @param positionVector Where to create the entity, as a b2Vec2
+ * @param options Arguments of creating the body. keys are defined as follows
+ *                filterCategory   : as Box2D fixture.filter.categoryBits property
+ *                filterMask       : as Box2D fixture.filter.maskBits property
+ *                isSensor         : as Box2D fixture.isSensor property
+ *                linearVelocity   : Initial linear velocity of the body
+ *                any other options: If the key matches any properties as Box2D BodyDef or FixtureDef, it will be set to corresponding BodyDef/FixtureDef 
+ *                                   property.
+ * @param addShapeFunc Function of adding the shape. See addEdgeShape/addBoxShape/addCircleShape for details.
+ */
 function addShape(world, positionVector, options, addShapeFunc){
 	var options = options || {};
 

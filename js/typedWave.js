@@ -164,7 +164,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[1] = [].pushMul(2, simple).pushMul(2, chasing);
 	waveData[2] = [].pushMul(3, randomFiring);
 	waveData[3] = [].pushMul(2, simple).pushMul(2, chasing).pushMul(2, randomFiring);
-	waveData[4] = [].pushMul(3, aimedFiring);
+	waveData[4] = [].pushMul(4, aimedFiring);
 	waveData[5] = [].pushMul(2, chasing).pushMul(2, randomFiring).pushMul(2, aimedFiring);
 	waveData[6] = [].pushMul(5, hp5);
 	waveData[7] = [].pushMul(3, hp5).pushMul(3, chasing).pushMul(2, aimedFiring);
@@ -173,9 +173,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[10] = [].pushMul(3, large).pushMul(3, small);
 	waveData[11] = [].pushMul(3, fast).pushMul(2, large).pushMul(2, small);
 	waveData[12] = [].pushMul(3, large).pushMul(2, hp5).pushMul(3, hp3AimedFiring);
-	waveData[13] = [].pushMul(3, fast).pushMul(2, small).pushMul(3, chasing);
+	waveData[13] = [].pushMul(3, fast).pushMul(3, small).pushMul(3, chasing);
 	waveData[14] = [].pushMul(15, chasing);
 	waveData[15] = [].pushMul(5, counterAttack);
+	waveData[16] = [].pushMul(3, counterAttack).pushMul(3, chasing).pushMul(2, hp3AimedFiring);
 	
 	$.each(waveData[(wave - 1) % waveData.length], function(){
 		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) { 

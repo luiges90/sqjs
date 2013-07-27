@@ -123,6 +123,64 @@ var Behaviours = (function() {
 			this.body.SetPosition(randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1));
 		},
 		
+		blink: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['blinkOn', 'blinkOff']);
+			
+			this.blinkAction = this.blinkAction || [];
+			
+			if (typeof this.blinkTimer === 'undefined') {
+				this.blinkTimer = randBetween(0, this.blinkOn);
+			}
+			if (typeof this.oldColor === 'undefined') {
+				this.oldColor = $.extend({}, this.color);
+			}
+			if (typeof this.blinking === 'undefined') {
+				this.blinking = false;
+			}
+
+			if (this.blinkTimer <= 0){
+				this.blinking = !this.blinking;
+				this.color.a = this.blinking ? 0 : this.oldColor.a;
+				this.blinkTimer = this.blinking ? this.blinkOff : this.blinkOn;
+			}
+			
+			for (var i = 0; i < this.blinkAction.length; ++i) {
+				this.blinkAction[i].call(this, keys, mouse, player, playerBullet, enemy);
+			}
+			
+			this.blinkTimer--;
+		},
+		
+		counterAttackOnBlink: function(keys, mouse, player, playerBullet, enemy) {
+			if (typeof this.blinking === 'undefined') return;
+			
+			if (this.blinking) {
+				requiredFields.call(this, ['bulletSpeed', 'createBullet', 'aimError']);
+
+				var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
+
+				var bullet = this.createBullet(this, velocity);
+
+				enemy.push(bullet);
+			}
+		},
+		
+		hpImmuneWhenBlink: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['hp']);
+			
+			if (typeof this.blinking === 'undefined') return;
+			
+			if (typeof this.currentHp === 'undefined') {
+				this.currentHp = this.hp;
+			}
+			
+			if (!this.blinking) {
+				this.currentHp--;
+			}
+			
+			return this.currentHp > 0;
+		},
+		
 	};
 
 })();

@@ -46,7 +46,7 @@ function addShape(world, positionVector, options, addShapeFunc){
 	fd.isSensor = options.sensor || false;
 
 	body.CreateFixture(fd);
-	body.ApplyImpulse(options.linearVelocity, body.GetWorldCenter());
+	body.SetLinearVelocity(options.linearVelocity);
 
 	return body;
 }
@@ -119,7 +119,14 @@ function vectorFromTo(from, to, magnitude) {
 	var vector = new b2Vec2(to.x - from.x, to.y - from.y);
 	if (magnitude) {
 		vector.Normalize();
-		vector.Multiply(0.06);
+		vector.Multiply(magnitude);
 	}
 	return vector;
+}
+
+Array.prototype.pushMul = function(times, item){
+	for (var i = 0; i < times; ++i){
+		this.push(item);
+	}
+	return this;
 }

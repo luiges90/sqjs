@@ -63,7 +63,7 @@ function fireByLeftMouse(keys, mouse, player, playerBullet, enemy) {
 
 		var position = mouse.position;
 
-		var fireVector = vectorFromTo(player.body.GetPosition(), position, 0.06);
+		var fireVector = vectorFromTo(player.body.GetPosition(), position, 5);
 
 		var bullet = createPlayerBullet(player, fireVector);
 

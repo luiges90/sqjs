@@ -71,10 +71,13 @@ function typedWave(wave, player, oldEnemy) {
 	waveData[5] = [aimedFiring, aimedFiring, aimedFiring];
 	waveData[6] = [chasing, chasing, randomFiring, randomFiring, aimedFiring, aimedFiring];
 	waveData[7] = [hp5, hp5, hp5, chasing, chasing, chasing, chasing];
+	waveData[8] = [hp5, hp5, hp5, aimedFiring, randomFiring, aimedFiring, randomFiring];
 	
 	var enemy = [];
-	$.each(waveData[wave], function(){
-		enemy.push(this());
+	$.each(waveData[wave % waveData.length], function(){
+		for (var i = 0; i < (wave / waveData.length) | 0; i++) { // float to int
+			enemy.push(this());
+		}
 	});
 
 	return enemy;

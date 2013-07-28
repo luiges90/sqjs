@@ -11,7 +11,7 @@ var FPS = 60;
 	var enemy = [];
 	var oldEnemy = [];
 	
-	var lives = 99999;
+	var lives = 5;
 	var score = 0;
 	var wave = 1;
 	
@@ -163,6 +163,9 @@ var FPS = 60;
 	
 		if (completed){
 			wave++;
+			if (wave % 5 === 0){
+				lives++;
+			}
 			enemy = generateWave(enemy, wave, player, oldEnemy);
 			oldEnemy = enemy.slice();
 		}

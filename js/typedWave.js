@@ -13,10 +13,11 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		return randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1);
 	};
 
-	var simple = function(){
-		var e = createEnemy(getEnemyPosition(), 0.12, {
+	var simple = function(parent){
+		var e = createEnemy(parent ? parent.body.GetPosition() : getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 0, s: 1, l: 0.5, a: 1}
+			color: {h: 0, s: 1, l: 0.5, a: 1},
+			scoreOnDestroy: parent ? 0 : 1
 		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
@@ -414,15 +415,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		e.fireCooldown = 100;
 		e.bulletSpeed = 3;
 		e.hp = 5;
-		e.createBullet = function(parent, velocity) {
-			return createEnemy(parent.body.GetPosition(), 0.12, {
-				linearVelocity: velocity,
-				color: {h: 0, s: 1, l: 0.5, a: 1},
-				scoreOnDestroy: 0,
-				lifetime: -1,
-				preventNextWave: false
-			}, [Behaviours.alignRotationToMovement]);
-		};
+		e.createBullet = simple;
 		
 		return e;
 	};

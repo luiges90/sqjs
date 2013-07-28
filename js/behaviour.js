@@ -33,6 +33,8 @@ var Behaviours = (function() {
 
 		chasePlayer: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['chaseFactor']);
+			
+			if (player.destroyed) return;
 
 			var current = this.body.GetAngle();
 			var target = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition()));
@@ -92,7 +94,11 @@ var Behaviours = (function() {
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
 
-				var angle = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError);
+				if (player.destroyed) {
+					var angle = randomAngle();
+				} else {
+					var angle = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError);
+				}
 				for (var i = -this.bulletSpread / 2 + 0.5; i < this.bulletSpread / 2 + 0.5; i += 1) {
 					var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
@@ -191,6 +197,46 @@ var Behaviours = (function() {
 			}
 			
 			return this.currentHp > 0;
+		},
+		
+		sneaky: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['sneakyRange']);
+			
+			if (typeof this.oldColor === 'undefined') {
+				this.oldColor = $.extend({}, this.color);
+			}
+			if (typeof this.blinking === 'undefined') {
+				this.blinking = false;
+			}
+			
+			if (!player.destroyed && distanceSquared(this.body.GetPosition(), player.body.GetPosition()) < this.sneakyRange * this.sneakyRange) {
+				this.blinking = false;
+				this.color.a = this.oldColor.a;
+			} else {
+				this.blinking = true;
+				this.color.a = 0;
+			}
+			
+		},
+		
+		attractBullet: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['attractingForce']);
+			
+			var that = this;
+			$.each(playerBullet, function(){
+				var force = vectorFromTo(this.body.GetPosition(), that.body.GetPosition(), that.attractingForce);
+				this.body.ApplyImpulse(force, this.body.GetWorldCenter());
+			});
+		},
+		
+		repelBullet: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['repellingForce']);
+			
+			var that = this;
+			$.each(playerBullet, function(){
+				var force = vectorFromTo(that.body.GetPosition(), this.body.GetPosition(), that.repellingForce);
+				this.body.ApplyImpulse(force, this.body.GetWorldCenter());
+			});
 		},
 		
 	};

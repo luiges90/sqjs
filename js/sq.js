@@ -13,7 +13,7 @@ var FPS = 60;
 	
 	var lives = 99999;
 	var score = 0;
-	var wave = 1;
+	var wave = 56;
 	
 	var pausing = false;
 

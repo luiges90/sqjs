@@ -131,7 +131,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	
 	var fast = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
-			linearVelocity: rtToVector(9, randomAngle()),
+			linearVelocity: rtToVector(6, randomAngle()),
 			color: {h: 0, s: 0.9, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement]);
 
@@ -363,7 +363,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var indestructibleFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 20, s: 0.8, l: 0.5, a: 1}
+			color: {h: 30, s: 0.8, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire]);
 
 		e.fireCooldown = 100;
@@ -377,6 +377,136 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				lifetime: 100,
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
+		};
+		
+		return e;
+	};
+	
+	var bulletAttractor = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 90, s: 1, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.attractBullet], [Behaviours.hp]);
+		
+		e.hp = 20;
+		e.attractingForce = 0.001;
+		
+		return e;
+	};
+	
+	var bulletRepulsor = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 100, s: 1, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.repelBullet]);
+		
+		e.repellingForce = 0.001;
+		
+		return e;
+	};
+	
+	var generator = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 110, s: 1, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire], [Behaviours.hp]);
+
+		e.fireCooldown = 100;
+		e.bulletSpeed = 3;
+		e.hp = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.12, {
+				linearVelocity: velocity,
+				color: {h: 0, s: 1, l: 0.5, a: 1},
+				scoreOnDestroy: 0,
+				lifetime: -1,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement]);
+		};
+		
+		return e;
+	};
+	
+	var sneaky = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(2, randomAngle()),
+			color: {h: 120, s: 1, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.sneaky, Behaviours.chasePlayer], [Behaviours.hpImmuneWhenBlink]);
+		
+		e.hp = 1;
+		e.sneakyRange = 1;
+		e.chaseFactor = 0.05;
+		
+		return e;
+	};
+	
+	var sneakyMineLayer = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 80, s: 1, l: 0.6, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
+
+		e.fireCooldown = 50;
+		e.bulletSpeed = 0;
+		e.createBullet = function(parent, velocity) {
+			var e = createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: $.extend({}, parent.color),
+				scoreOnDestroy: 0,
+				lifetime: -1,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement, Behaviours.sneaky], [Behaviours.hpImmuneWhenBlink]);
+			
+			e.hp = 1;
+			e.sneakyRange = 1;
+			
+			return e;
+		};
+		
+		return e;
+	};
+	
+	var fastRandomFiring = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(6, randomAngle()),
+			color: {h: 20, s: 0.7, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
+
+		e.fireCooldown = 40;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement]);
+		};
+		
+		return e;
+	};
+	
+	var hpAimedFiring5 = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 30, s: 0.8, l: 0.6, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
+
+		e.fireCooldown = 100;
+		e.bulletSpeed = 5;
+		e.bulletSpread = 3;
+		e.hp = 5;
+		e.bulletSpreadAngle = deg2rad(10);
+		e.aimError = 0;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement]);
 		};
 		
 		return e;
@@ -421,9 +551,30 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[35] = [].pushMul(5, indestructibleFiring).pushMul(5, hpCounterAttack);
 	waveData[36] = [].pushMul(4, indestructibleFiring).pushMul(4, smallChasing).pushMul(4, frequentRandomFiring);
 	waveData[37] = [].pushMul(6, smallChasing).pushMul(6, blinking);
-	waveData[38] = [].pushMul(8, mineLayer).pushMul(8, frequentRandomFiring);
+	waveData[38] = [].pushMul(8, mineLayer).pushMul(4, frequentRandomFiring).pushMul(4, randomFiring3);
 	waveData[39] = [].pushMul(3, smallChasing).pushMul(3, chaseFiring).pushMul(3, hpChasing)
 						.pushMul(3, blinking).pushMul(3, blinkingCounterAttack).pushMul(3, hpCounterAttack);
+	waveData[40] = [].pushMul(8, bulletAttractor);
+	waveData[41] = [].pushMul(8, bulletRepulsor);
+	waveData[42] = [].pushMul(4, bulletRepulsor).pushMul(6, hpChasing);
+	waveData[43] = [].pushMul(2, bulletAttractor).pushMul(2, bulletRepulsor).pushMul(6, hpAimedFiring);
+	waveData[44] = [].pushMul(4, bulletAttractor).pushMul(3, hpCounterAttack).pushMul(3, blinkingCounterAttack);
+	waveData[45] = [].pushMul(5, generator);
+	waveData[46] = [].pushMul(3, generator).pushMul(6, largeFiring);
+	waveData[47] = [].pushMul(5, bulletAttractor).pushMul(5, generator);
+	waveData[48] = [].pushMul(8, sneaky);
+	waveData[49] = [].pushMul(4, sneaky).pushMul(4, randomFiring3).pushMul(4, frequentRandomFiring);
+	waveData[50] = [].pushMul(5, sneaky).pushMul(5, hpCounterAttack);
+	waveData[51] = [].pushMul(8, sneakyMineLayer);
+	waveData[52] = [].pushMul(3, sneakyMineLayer).pushMul(2, generator).pushMul(5, smallChasing);
+	waveData[53] = [].pushMul(5, sneaky).pushMul(5, bulletAttractor);
+	waveData[54] = [].pushMul(3, sneaky).pushMul(3, sneakyMineLayer).pushMul(3, blinkingCounterAttack).pushMul(3, indestructibleFiring);
+	waveData[55] = [].pushMul(4, fastRandomFiring).pushMul(4, hpAimedFiring5);
+	waveData[56] = [].pushMul(5, fastRandomFiring).pushMul(5, hpCounterAttack).pushMul(2, bulletRepulsor);
+	waveData[57] = [].pushMul(6, indestructibleFiring).pushMul(3, hpAimedFiring5).pushMul(3, largeFiring);
+	waveData[58] = [].pushMul(5, hpChasing).pushMul(5, fastRandomFiring).pushMul(5, smallChasing);
+	waveData[59] = [].pushMul(3, generator).pushMul(3, bulletAttractor).pushMul(3, bulletRepulsor).
+						pushMul(3, fastRandomFiring).pushMul(3, hpAimedFiring5).pushMul(5, sneaky);
 	
 	$.each(waveData[(wave - 1) % waveData.length], function(){
 		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) { 

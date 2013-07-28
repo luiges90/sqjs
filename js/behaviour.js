@@ -60,14 +60,20 @@ var Behaviours = (function() {
 				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 			}
 			
+			this.bulletSpread = this.bulletSpread || 1;
+			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
+			
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
+	
+				var angle = randomAngle();
+				for (var i = -this.bulletSpread / 2 + 0.5; i < this.bulletSpread / 2 + 0.5; i += 1) {
+					var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
-				var velocity = rtToVector(this.bulletSpeed, randomAngle());
-
-				var bullet = this.createBullet(this, velocity);
-				
-				enemy.push(bullet);
+					var bullet = this.createBullet(this, velocity);
+					
+					enemy.push(bullet);
+				}
 			}
 
 			this.fireCooldownTimer--;
@@ -83,11 +89,14 @@ var Behaviours = (function() {
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
 
-				var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
+				var angle = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError);
+				for (var i = -this.bulletSpread / 2 + 0.5; i < this.bulletSpread / 2 + 0.5; i += 1) {
+					var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
-				var bullet = this.createBullet(this, velocity);
+					var bullet = this.createBullet(this, velocity);
 
-				enemy.push(bullet);
+					enemy.push(bullet);
+				}
 			}
 
 			this.fireCooldownTimer--;

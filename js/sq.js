@@ -11,9 +11,9 @@ var FPS = 60;
 	var enemy = [];
 	var oldEnemy = [];
 	
-	var lives = 99999;
+	var lives = 5;
 	var score = 0;
-	var wave = 46;
+	var wave = 1;
 	
 	var pausing = false;
 

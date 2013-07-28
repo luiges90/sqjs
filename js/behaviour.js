@@ -85,6 +85,9 @@ var Behaviours = (function() {
 			if (typeof this.fireCooldownTimer === 'undefined') {
 				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 			}
+			
+			this.bulletSpread = this.bulletSpread || 1;
+			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
 
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;

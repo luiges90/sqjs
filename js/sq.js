@@ -10,19 +10,19 @@ var FPS = 60;
 	var playerBullet = [];
 	var enemy = [];
 	var oldEnemy = [];
-	
+
 	var lives = 5;
 	var score = 0;
-	var wave = 1;
-	
+	var wave = 61;
+
 	var pausing = false;
 
 	window.requestAnimFrame = (function(){
-		return  window.requestAnimationFrame       || 
-				window.webkitRequestAnimationFrame || 
-				window.mozRequestAnimationFrame    || 
-				window.oRequestAnimationFrame      || 
-				window.msRequestAnimationFrame     || 
+		return  window.requestAnimationFrame       ||
+				window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame    ||
+				window.oRequestAnimationFrame      ||
+				window.msRequestAnimationFrame     ||
 				function( callback ){
 				  window.setTimeout(callback, 1000 / FPS);
 				};
@@ -32,14 +32,14 @@ var FPS = 60;
 	var mouse = {};
 	function step(timestamp) {
 		if (pausing) return;
-		
+
 		checkCompleted();
-	
+
 		world.Step(1/FPS, 3, 2);
 
 		var canvas = document.getElementById('scene').getContext('2d');
 		canvas.clearRect(0, 0, 600, 600);
-		
+
 		canvas.font = '200px "Century Gothic", CenturyGothic, AppleGothic, sans-serif';
 		canvas.textAlign = 'center';
 		canvas.textBaseline = 'middle';
@@ -58,7 +58,7 @@ var FPS = 60;
 				}
 				playerBullet[i].justHit = false;
 			}
-		
+
 			if (playerBullet[i].isDestroyed()) {
 				world.DestroyBody(playerBullet[i].body);
 				playerBullet.splice(i--, 1);
@@ -67,7 +67,7 @@ var FPS = 60;
 				playerBullet[i].draw();
 			}
 		}
-		
+
 		for (i = 0; i < enemy.length; ++i) {
 			if (enemy[i].justHit){
 				for (var j = 0; j < enemy[i].postHitAction.length; ++j) {
@@ -75,7 +75,7 @@ var FPS = 60;
 				}
 				enemy[i].justHit = false;
 			}
-		
+
 			if (enemy[i].isDestroyed()) {
 				world.DestroyBody(enemy[i].body);
 				enemy.splice(i--, 1);
@@ -84,13 +84,13 @@ var FPS = 60;
 				enemy[i].draw();
 			}
 		}
-		
+
 		canvas.font = '24px "Century Gothic", CenturyGothic, AppleGothic, sans-serif';
 		canvas.textAlign = 'left';
 		canvas.textBaseline = 'top';
 		canvas.fillStyle = 'hsl(0, 0%, 100%)';
 		canvas.fillText('Lives: ' + lives, 0, 0);
-		
+
 		canvas.textAlign = 'right';
 		canvas.fillText('Score: ' + score, 600, 0);
 	}
@@ -99,22 +99,22 @@ var FPS = 60;
 		requestAnimFrame( animate );
 		step();
 	}
-	
+
 	function onPreSolve(contact, oldManifold) {
 		var a = contact.GetFixtureA().GetBody().GetUserData();
 		var b = contact.GetFixtureB().GetBody().GetUserData();
-		
+
 		if (a === null || b === null) return;
 
 		contact.SetEnabled(false);
 	}
-	
+
 	function onContact(contact) {
 		var a = contact.GetFixtureA().GetBody().GetUserData();
 		var b = contact.GetFixtureB().GetBody().GetUserData();
-		
+
 		if (a === null || b === null) return;
-		
+
 		if ((a.type === TYPE_ENEMY && b.type === TYPE_PLAYER) || (a.type === TYPE_PLAYER && b.type === TYPE_ENEMY)) {
 			var p = a.type === TYPE_PLAYER ? a : b;
 
@@ -125,7 +125,7 @@ var FPS = 60;
 				} else {
 					setTimeout(revive, 4000);
 				}
-				
+
 				p.body.SetLinearVelocity(new b2Vec2(0, 0));
 				p.destroy();
 			}
@@ -141,7 +141,7 @@ var FPS = 60;
 			if (!preventDestroy) {
 				a.destroy();
 			}
-			
+
 			preventDestroy = false;
 			for (var i = 0; i < b.onHitAction.length; ++i) {
 				preventDestroy |= b.onHitAction[i].call(b, keys, mouse, player, playerBullet, enemy);
@@ -152,7 +152,7 @@ var FPS = 60;
 		}
 
 	}
-	
+
 	function checkCompleted() {
 		var completed = true;
 		$.each(enemy, function(){
@@ -160,7 +160,7 @@ var FPS = 60;
 				completed = false;
 			}
 		});
-	
+
 		if (completed){
 			wave++;
 			if (wave % 5 === 0){
@@ -170,11 +170,11 @@ var FPS = 60;
 			oldEnemy = enemy.slice();
 		}
 	}
-	
+
 	function gameover() {
 		//alert('Game over');
 	}
-	
+
 	function revive() {
 		player.revive();
 	}
@@ -196,7 +196,7 @@ var FPS = 60;
 			delete keys[e.which];
 			return false;
 		});
-		
+
 		$body.mousedown(function(e){
 			mouse[e.which] = true;
 			mouse.position = {
@@ -205,12 +205,12 @@ var FPS = 60;
 			};
 			return false;
 		});
-		
+
 		$window.mouseup(function(e){
 			delete mouse[e.which];
 			return false;
 		});
-		
+
 		$window.mousemove(function(e){
 			mouse.position = {
 				x: (e.pageX - $scene.offset().left - 300) / 100,
@@ -223,13 +223,13 @@ var FPS = 60;
 	$(document).ready(function() {
 
 		world = new b2World(new b2Vec2(0, 0));
-		
+
 		var listener = new b2ContactListener;
 		listener.PreSolve = onPreSolve;
 		listener.BeginContact = onContact;
 
 		world.SetContactListener(listener);
-		
+
 		// set field boundary
 		addEdgeShape(world, new b2Vec2(-3, -3), new b2Vec2(3, -3), {restitution: 1});
 		addEdgeShape(world, new b2Vec2(-3, 3), new b2Vec2(3, 3), {restitution: 1});
@@ -238,9 +238,9 @@ var FPS = 60;
 
 		// player entity
 		player = createPlayer();
-		
+
 		initControl();
-		
+
 		enemy = generateWave(enemy, wave, player, oldEnemy);
 		oldEnemy = enemy.slice();
 

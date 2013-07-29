@@ -32,7 +32,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		e.chaseFactor = 0.02;
 		return e;
 	};
-	
+
 	var randomFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -50,10 +50,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var aimedFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -72,21 +72,21 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var hp = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 0, s: 1, l: 0.55, a: 1}
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
-		
+
 		e.hp = 5;
-		
+
 		return e;
 	};
-	
+
 	var hpAimedFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -106,21 +106,21 @@ function generateWave(enemy, wave, player, oldEnemy) {
 			}, [Behaviours.alignRotationToMovement]);
 		};
 		e.hp = 3;
-		
+
 		return e;
 	};
-	
+
 	var large = function(){
 		var e = createEnemy(getEnemyPosition(), 0.4, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 0, s: 1, l: 0.6, a: 1}
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
-		
+
 		e.hp = 5;
-		
+
 		return e;
 	};
-	
+
 	var small = function(){
 		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -129,7 +129,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 
 		return e;
 	};
-	
+
 	var fast = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(6, randomAngle()),
@@ -138,7 +138,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 
 		return e;
 	};
-	
+
 	var counterAttack = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -156,10 +156,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false,
 			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var chaseFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -179,10 +179,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var hpChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -193,18 +193,18 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		e.hp = 3;
 		return e;
 	};
-	
+
 	var teleporting = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 60, s: 1, l: 0.55, a: 1}
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp], [Behaviours.teleport]);
-		
+
 		e.hp = 3;
-		
+
 		return e;
 	};
-	
+
 	var hpCounterAttack = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -223,29 +223,29 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false,
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var blinking = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 70, s: 1, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.blink], [Behaviours.hp]);
-		
+
 		e.hp = 3;
 		e.blinkOn = 60;
 		e.blinkOff = 60;
-		
+
 		return e;
 	};
-	
+
 	var blinkingCounterAttack = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 70, s: 0.9, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.blink], [Behaviours.hpImmuneWhenBlink], [Behaviours.counterAttackOnBlink]);
-		
+
 		e.hp = 1;
 		e.blinkOn = 60;
 		e.blinkOff = 60;
@@ -260,10 +260,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false,
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var frequentRandomFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -281,10 +281,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var randomFiring3 = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -304,10 +304,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var smallChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -317,7 +317,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		e.chaseFactor = 0.06;
 		return e;
 	};
-	
+
 	var largeFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.4, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -336,10 +336,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var mineLayer = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -357,10 +357,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var indestructibleFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -379,33 +379,33 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var bulletAttractor = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 90, s: 1, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.attractBullet], [Behaviours.hp]);
-		
+
 		e.hp = 20;
 		e.attractingForce = 0.001;
-		
+
 		return e;
 	};
-	
+
 	var bulletRepulsor = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 100, s: 1, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.repelBullet]);
-		
+
 		e.repellingForce = 0.001;
-		
+
 		return e;
 	};
-	
+
 	var generator = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -416,23 +416,23 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		e.bulletSpeed = 3;
 		e.hp = 5;
 		e.createBullet = simple;
-		
+
 		return e;
 	};
-	
+
 	var sneaky = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(2, randomAngle()),
 			color: {h: 120, s: 1, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.sneaky, Behaviours.chasePlayer], [Behaviours.hpImmuneWhenBlink]);
-		
+
 		e.hp = 1;
 		e.sneakyRange = 1;
 		e.chaseFactor = 0.05;
-		
+
 		return e;
 	};
-	
+
 	var sneakyMineLayer = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -449,16 +449,16 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				lifetime: -1,
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement, Behaviours.sneaky], [Behaviours.hpImmuneWhenBlink]);
-			
+
 			e.hp = 1;
 			e.sneakyRange = 1;
-			
+
 			return e;
 		};
-		
+
 		return e;
 	};
-	
+
 	var fastRandomFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(6, randomAngle()),
@@ -476,10 +476,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var hpAimedFiring5 = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -501,10 +501,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	var fireChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -512,20 +512,22 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 40;
-		e.bulletSpeed = 5;
+		e.bulletSpeed = 4;
 		e.createBullet = function(parent, velocity) {
-			return createEnemy(parent.body.GetPosition(), 0.06, {
+			var f = createEnemy(parent.body.GetPosition(), 0.06, {
 				linearVelocity: velocity,
 				color: parent.color,
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false
-			}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer);
+			}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer]);
+			f.chaseFactor = 0.05;
+			return f;
 		};
-		
+
 		return e;
 	};
-	
+
 	var darkFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
@@ -543,16 +545,16 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false
 			}, [Behaviours.alignRotationToMovement]);
 		};
-		
+
 		return e;
 	};
-	
+
 	// auto-teleporting
-	
+
 	// split on hit
-	
+
 	// blast on hit
-	
+
 	// force itself towards player
 
 	var waveData = [];
@@ -618,9 +620,10 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[58] = [].pushMul(5, hpChasing).pushMul(5, fastRandomFiring).pushMul(5, smallChasing);
 	waveData[59] = [].pushMul(3, generator).pushMul(3, bulletAttractor).pushMul(3, bulletRepulsor).
 						pushMul(3, fastRandomFiring).pushMul(3, hpAimedFiring5).pushMul(5, sneaky);
-	
+	waveData[60] = [].pushMul(6, fireChasing);
+
 	$.each(waveData[(wave - 1) % waveData.length], function(){
-		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) { 
+		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) {
 			enemy.push(this());
 		}
 	});

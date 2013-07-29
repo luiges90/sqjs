@@ -504,6 +504,56 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		
 		return e;
 	};
+	
+	var fireChasing = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 130, s: 1, l: 0.5, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
+
+		e.fireCooldown = 40;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer);
+		};
+		
+		return e;
+	};
+	
+	var darkFiring = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 20, s: 1, l: 0.1, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
+
+		e.fireCooldown = 40;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement]);
+		};
+		
+		return e;
+	};
+	
+	// auto-teleporting
+	
+	// split on hit
+	
+	// blast on hit
+	
+	// force itself towards player
 
 	var waveData = [];
 	waveData[0] = [].pushMul(3, simple);

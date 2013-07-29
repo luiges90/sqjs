@@ -1,5 +1,4 @@
 # sq.js #
-====
 
 ## What's this? ##
 

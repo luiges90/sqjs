@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Behaviours for enemies. 
+ * Behaviours for enemies.
  * To add new behaviours: put inside the returned object. Behaviours have the following signature.
  *     function(keys, mouse, player, playerBullet, enemy)
  * @this is set to the enemy performing the action.
@@ -33,7 +33,7 @@ var Behaviours = (function() {
 
 		chasePlayer: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['chaseFactor']);
-			
+
 			if (player.destroyed) return;
 
 			var current = this.body.GetAngle();
@@ -46,7 +46,7 @@ var Behaviours = (function() {
 			} else if (target < current) {
 				direction = diff > Math.PI ? 1 : -1;
 			}
-			
+
 			var oldMag = this.body.GetLinearVelocity().Length();
 			if (diff < this.chaseFactor) {
 				this.body.SetLinearVelocity(rtToVector(oldMag, target));
@@ -57,23 +57,23 @@ var Behaviours = (function() {
 
 		randomFire: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['fireCooldown', 'bulletSpeed', 'createBullet']);
-			
+
 			if (typeof this.fireCooldownTimer === 'undefined') {
 				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 			}
-			
+
 			this.bulletSpread = this.bulletSpread || 1;
 			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
-			
+
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
-	
+
 				var angle = randomAngle();
 				for (var i = -this.bulletSpread / 2 + 0.5; i < this.bulletSpread / 2 + 0.5; i += 1) {
 					var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
 					var bullet = this.createBullet(this, velocity);
-					
+
 					enemy.push(bullet);
 				}
 			}
@@ -83,11 +83,11 @@ var Behaviours = (function() {
 
 		aimedFire: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['fireCooldown', 'bulletSpeed', 'createBullet', 'aimError']);
-			
+
 			if (typeof this.fireCooldownTimer === 'undefined') {
 				this.fireCooldownTimer = randBetween(0, this.fireCooldown);
 			}
-			
+
 			this.bulletSpread = this.bulletSpread || 1;
 			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
 
@@ -113,20 +113,20 @@ var Behaviours = (function() {
 
 		hp: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['hp']);
-			
+
 			if (typeof this.currentHp === 'undefined') {
 				this.currentHp = this.hp;
 			}
-			
+
 			this.currentHp--;
-			
+
 			return this.currentHp > 0;
 		},
-		
+
 		indestructible: function(keys, mouse, player, playerBullet, enemy) {
 			return true;
 		},
-		
+
 		counterAttack: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['bulletSpeed', 'createBullet', 'aimError']);
 
@@ -140,12 +140,12 @@ var Behaviours = (function() {
 		teleport: function(keys, mouse, player, playerBullet, enemy) {
 			this.body.SetPosition(randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1));
 		},
-		
+
 		blink: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['blinkOn', 'blinkOff']);
-			
+
 			this.blinkAction = this.blinkAction || [];
-			
+
 			if (typeof this.blinkTimer === 'undefined') {
 				this.blinkTimer = randBetween(0, this.blinkOn);
 			}
@@ -161,17 +161,17 @@ var Behaviours = (function() {
 				this.color.a = this.blinking ? 0 : this.oldColor.a;
 				this.blinkTimer = this.blinking ? this.blinkOff : this.blinkOn;
 			}
-			
+
 			for (var i = 0; i < this.blinkAction.length; ++i) {
 				this.blinkAction[i].call(this, keys, mouse, player, playerBullet, enemy);
 			}
-			
+
 			this.blinkTimer--;
 		},
-		
+
 		counterAttackOnBlink: function(keys, mouse, player, playerBullet, enemy) {
 			if (typeof this.blinking === 'undefined') return;
-			
+
 			if (this.blinking) {
 				requiredFields.call(this, ['bulletSpeed', 'createBullet', 'aimError']);
 
@@ -182,33 +182,33 @@ var Behaviours = (function() {
 				enemy.push(bullet);
 			}
 		},
-		
+
 		hpImmuneWhenBlink: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['hp']);
-			
+
 			if (typeof this.blinking === 'undefined') return;
-			
+
 			if (typeof this.currentHp === 'undefined') {
 				this.currentHp = this.hp;
 			}
-			
+
 			if (!this.blinking) {
 				this.currentHp--;
 			}
-			
+
 			return this.currentHp > 0;
 		},
-		
+
 		sneaky: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['sneakyRange']);
-			
+
 			if (typeof this.oldColor === 'undefined') {
 				this.oldColor = $.extend({}, this.color);
 			}
 			if (typeof this.blinking === 'undefined') {
 				this.blinking = false;
 			}
-			
+
 			if (!player.destroyed && distanceSquared(this.body.GetPosition(), player.body.GetPosition()) < this.sneakyRange * this.sneakyRange) {
 				this.blinking = false;
 				this.color.a = this.oldColor.a;
@@ -216,29 +216,45 @@ var Behaviours = (function() {
 				this.blinking = true;
 				this.color.a = 0;
 			}
-			
+
 		},
-		
+
 		attractBullet: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['attractingForce']);
-			
+
 			var that = this;
 			$.each(playerBullet, function(){
 				var force = vectorFromTo(this.body.GetPosition(), that.body.GetPosition(), that.attractingForce);
 				this.body.ApplyImpulse(force, this.body.GetWorldCenter());
 			});
 		},
-		
+
 		repelBullet: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['repellingForce']);
-			
+
 			var that = this;
 			$.each(playerBullet, function(){
 				var force = vectorFromTo(that.body.GetPosition(), this.body.GetPosition(), that.repellingForce);
 				this.body.ApplyImpulse(force, this.body.GetWorldCenter());
 			});
 		},
-		
+
+		autoTeleport: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['teleportCooldown']);
+
+			if (typeof this.teleportTimer === 'undefined') {
+				this.teleportTimer = randBetween(0, this.teleportCooldown);
+			}
+
+			if (this.teleportTimer <= 0) {
+				this.teleportTimer = this.teleportCooldown;
+
+				this.body.SetPosition(randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1));
+			}
+
+			this.teleportTimer--;
+		},
+
 	};
 
 })();

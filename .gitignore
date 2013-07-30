@@ -1,3 +1,4 @@
 *.lnk
 lib
 Box2dWeb*
+.DS_Store

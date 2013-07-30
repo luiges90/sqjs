@@ -511,8 +511,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 			color: {h: 130, s: 1, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
-		e.fireCooldown = 40;
-		e.bulletSpeed = 4;
+		e.fireCooldown = 100;
+		e.bulletSpeed = 5;
 		e.createBullet = function(parent, velocity) {
 			var f = createEnemy(parent.body.GetPosition(), 0.06, {
 				linearVelocity: velocity,
@@ -549,11 +549,49 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		return e;
 	};
 
-	// auto-teleporting
+	var autoTeleporting = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 60, s: 1, l: 0.6, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.autoTeleport], [Behaviours.hp, Behaviours.teleport]);
+
+		e.teleportCooldown = 50;
+		e.hp = 5;
+
+		return e;
+	};
+
+	var teleportFiring = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 60, s: 0.9, l: 0.6, a: 1}
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire, Behaviours.autoTeleport], [Behaviours.hp, Behaviours.teleport]);
+
+		e.teleportCooldown = 50;
+		e.fireCooldown = 50;
+		e.aimError = deg2rad(10);
+		e.bulletSpeed = 5;
+		e.hp = 3;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false
+			}, [Behaviours.alignRotationToMovement]);
+		};
+
+		return e;
+	};
 
 	// split on hit
 
 	// blast on hit
+
+	// fast & tough
+
+	// small & tough
 
 	// force itself towards player
 
@@ -620,7 +658,15 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[58] = [].pushMul(5, hpChasing).pushMul(5, fastRandomFiring).pushMul(5, smallChasing);
 	waveData[59] = [].pushMul(3, generator).pushMul(3, bulletAttractor).pushMul(3, bulletRepulsor).
 						pushMul(3, fastRandomFiring).pushMul(3, hpAimedFiring5).pushMul(5, sneaky);
-	waveData[60] = [].pushMul(6, fireChasing);
+	waveData[60] = [].pushMul(10, darkFiring);
+	waveData[61] = [].pushMul(7, darkFiring).pushMul(5, sneaky);
+	waveData[62] = [].pushMul(7, fireChasing);
+	waveData[63] = [].pushMul(5, fireChasing).pushMul(5, largeFiring).pushMul(2, generator);
+	waveData[64] = [].pushMul(12, autoTeleporting);
+	waveData[65] = [].pushMul(6, autoTeleporting).pushMul(3, indestructibleFiring).pushMul(3, smallChasing);
+	waveData[66] = [].pushMul(5, teleportFiring).pushMul(5, autoTeleporting);
+	waveData[67] = [].pushMul(4, teleportFiring).pushMul(4, darkFiring).pushMul(4, fireChasing);
+	waveData[68] = [].pushMul(6, autoTeleporting).pushMul(4, hpCounterAttack).pushMul(2, generator).pushMul(2, hpAimedFiring5);
 
 	$.each(waveData[(wave - 1) % waveData.length], function(){
 		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) {

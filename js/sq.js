@@ -11,9 +11,9 @@ var FPS = 60;
 	var enemy = [];
 	var oldEnemy = [];
 
-	var lives = 599;
+	var lives = 999;
 	var score = 0;
-	var wave = 66;
+	var wave = 1;
 
 	var pausing = false;
 
@@ -37,7 +37,7 @@ var FPS = 60;
 
 		world.Step(1/FPS, 3, 2);
 
-		var canvas = document.getElementById('scene').getContext('2d');
+		var canvas = document.getElementById('game-scene').getContext('2d');
 		canvas.clearRect(0, 0, 600, 600);
 
 		canvas.font = '200px "Century Gothic", CenturyGothic, AppleGothic, sans-serif';
@@ -182,7 +182,7 @@ var FPS = 60;
 	function initControl() {
 		var $body = $(document);
 		var $window = $(window);
-		var $scene = $('#scene');
+		var $scene = $('#game-scene');
 
 		$body.keydown(function (e) {
 			keys[e.which] = true;

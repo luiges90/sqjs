@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Behaviours for player. 
+ * Behaviours for player.
  * See behaviour.js for details.
  */
 
@@ -15,7 +15,7 @@ var PlayerBehaviours = (function(){
 		});
 
 		bullet.draw = function(){
-			var canvas = document.getElementById('scene').getContext('2d');
+			var canvas = document.getElementById('game-scene').getContext('2d');
 			var drawX, drawY, drawSize;
 
 			drawX = this.body.GetPosition().x * 100 + 300;
@@ -34,7 +34,7 @@ var PlayerBehaviours = (function(){
 	}
 
 	return {
-	
+
 		moveByWASD: function(keys, mouse, player, playerBullet, enemy) {
 			if (typeof this.movingForce === 'undefined'){
 				throw new 'movingForce is required';
@@ -87,7 +87,7 @@ var PlayerBehaviours = (function(){
 
 			this.fireCooldownTimer--;
 		}
-		
+
 	};
 
 })();

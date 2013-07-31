@@ -20,6 +20,18 @@
 
 </head>
 <body>
-	<canvas id="scene" width="600" height="600">Sorry, but it seems your browser is too old! Try IE 9+, Firefox 3.5+, Chrome or Opera 10.5+</canvas>
+	<canvas id="game-scene" class="scene" width="600" height="600">Sorry, but it seems your browser is too old! Try IE 9+, Firefox 3.5+, Chrome or Opera 10.5+</canvas>
+	<div class="scene" id="start-scene">
+		<div class="start-button" id="start">Start</div>
+		<div class="start-button" id="instruction">Instruction</div>
+		<div class="start-button" id="hiscore">Hiscore</div>
+	</div>
+	<div class="scene" id="instruction-scene">
+	</div>
+	<div class="scene" id="hiscore-scene">
+		<table id="hiscore-table">
+			<tr><th>Date</th><th>Wave</th><th>Score</th></tr>
+		</table>
+	</div>
 </body>
 </html>

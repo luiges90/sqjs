@@ -11,7 +11,7 @@ var FPS = 60;
 	var enemy = [];
 	var oldEnemy = [];
 
-	var lives = 999;
+	var lives = 5;
 	var score = 0;
 	var wave = 1;
 
@@ -220,8 +220,7 @@ var FPS = 60;
 		});
 	}
 
-	$(document).ready(function() {
-
+	function gameStart() {
 		world = new b2World(new b2Vec2(0, 0));
 
 		var listener = new b2ContactListener;
@@ -245,5 +244,9 @@ var FPS = 60;
 		oldEnemy = enemy.slice();
 
 		animate();
+	}
+
+	$(document).ready(function() {
+		gameStart();
 	});
 })();

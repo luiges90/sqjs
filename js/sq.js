@@ -14,8 +14,6 @@ var FPS = 60;
 	var lives = 5;
 	var score = 0;
 	var wave = 1;
-	
-	var HISCORE_KEY = 'sq_hiscore';
 
 	var pausing = false;
 
@@ -186,9 +184,9 @@ var FPS = 60;
 		enemy = [];
 		oldEnemy = [];
 		
-		var pos = saveHiScore(wave, score);
+		var pos = HiScore.saveHiScore(wave, score);
 		
-		showHiScore(pos);
+		HiScore.showHiScore(pos);
 	}
 
 	function revive() {
@@ -261,79 +259,6 @@ var FPS = 60;
 
 		animate();
 	}
-	
-	function getHiScoreDate() {
-		var now = new Date();
-		return now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear() + ' ' + zeroPad(now.getHours(), 2) + ':' + zeroPad(now.getMinutes(), 2);
-	}
-	
-	function getDefaultHiScore() {
-		return [
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-			];
-	}
-	
-	function loadHiScore() {
-		var hiScore = localStorage.getItem(HISCORE_KEY);
-		hiScore = JSON.parse(hiScore);
-		
-		return hiScore;
-	}
-	
-	function saveHiScore(wave, score) {
-		var hiScore = localStorage.getItem(HISCORE_KEY);
-		hiScore = JSON.parse(hiScore);
-		
-		if (hiScore === null)
-		{
-			hiScore = getDefaultHiScore();
-		}
-		
-		var pos;
-		$(hiScore).each(function(i) {
-			if (score >= this.score) {
-				pos = i;
-				hiScore.splice(i, 0, {time: getHiScoreDate(), wave: wave, score: score});
-				hiScore.splice(10, 1);
-				return false;
-			}
-		});
-		
-		localStorage.setItem(HISCORE_KEY, JSON.stringify(hiScore));
-		
-		return pos;
-	}
-	
-	function showHiScore(highlight) {
-		var hiScore = loadHiScore();
-		
-		if (hiScore === null){
-			hiScore = getDefaultHiScore();
-			saveHiScore(-1, -1);
-		}
-		
-		var table = $('#hiscore-table');
-		table.empty().append('<tr><th>Rank</th><th>Date</th><th>Wave</th><th>Score</th></tr>');
-		$.each(hiScore, function(i) {
-			table.append('<tr class="' + (i === highlight ? 'this-hiscore' : '') + '"><td>' + (i+1) + '</td><td>' + this.time + '</td><td>' + this.wave + '</td><td>' + this.score + '</td></tr>');
-		});
-		
-		$('.scene').hide();
-		$('#hiscore-scene').show();
-		$('#back').one('click', function() {
-			$('#hiscore-scene').hide();
-			$('#start-scene').show();
-		});
-	}
 
 	$(document).ready(function() {
 		$('#start').click(function() {
@@ -342,7 +267,7 @@ var FPS = 60;
 			gameStart();
 		});
 		
-		$('#hiscore').click(showHiScore);
+		$('#hiscore').click(HiScore.showHiScore);
 	});
 
 })();

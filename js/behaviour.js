@@ -254,6 +254,15 @@ var Behaviours = (function() {
 
 			this.teleportTimer--;
 		},
+		
+		split: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['splitCount', 'splitTo']);
+			
+			for (var i = 0; i < this.splitCount; ++i) {
+				var bullet = this.splitTo(this);
+				enemy.push(bullet);
+			}
+		},
 
 	};
 

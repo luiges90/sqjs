@@ -4,6 +4,8 @@ var world;
 
 var FPS = 60;
 
+var DEBUG_WAVE = false;
+
 (function() {
 
 	var player;
@@ -16,6 +18,7 @@ var FPS = 60;
 	var wave = 1;
 
 	var pausing = false;
+	var running = false;
 
 	window.requestAnimFrame = (function(){
 		return  window.requestAnimationFrame       ||
@@ -95,13 +98,10 @@ var FPS = 60;
 		canvas.fillText('Score: ' + score, 600, 0);
 	}
 
-	var stopAnimate = false;
 	function animate() {
-		if (!stopAnimate) {
+		if (running) {
 			requestAnimFrame( animate );
 			step();
-		} else {
-			stopAnimate = false;
 		}
 	}
 
@@ -177,7 +177,7 @@ var FPS = 60;
 	}
 
 	function gameover() {
-		stopAnimate = true;
+		running = false;
 		world = null;
 		player = null;
 		playerBullet = [];
@@ -185,6 +185,10 @@ var FPS = 60;
 		oldEnemy = [];
 		
 		var pos = HiScore.saveHiScore(wave, score);
+		
+		lives = 5;
+		score = 0;
+		wave = 1;
 		
 		HiScore.showHiScore(pos);
 	}
@@ -235,6 +239,9 @@ var FPS = 60;
 	}
 
 	function gameStart() {
+		$('.scene').hide();
+		$('#game-scene').show();
+			
 		world = new b2World(new b2Vec2(0, 0));
 
 		var listener = new b2ContactListener;
@@ -254,6 +261,7 @@ var FPS = 60;
 
 		initControl();
 
+		running = true;
 		enemy = generateWave(enemy, wave, player, oldEnemy);
 		oldEnemy = enemy.slice();
 
@@ -261,13 +269,23 @@ var FPS = 60;
 	}
 
 	$(document).ready(function() {
+		if (DEBUG_WAVE) {
+			lives = 99999;
+			wave = DEBUG_WAVE;
+			gameStart();
+		}
+	
 		$('#start').click(function() {
-			$('#start-scene').hide();
-			$('#game-scene').show();
 			gameStart();
 		});
 		
 		$('#hiscore').click(HiScore.showHiScore);
 	});
+	
+	window.onbeforeunload = function() {
+		if (running && !DEBUG_WAVE) {
+			return 'Are you sure to quit? Your progress will be lost.';
+		}
+	};
 
 })();

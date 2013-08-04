@@ -247,6 +247,13 @@ var FPS = 60;
 	}
 
 	$(document).ready(function() {
-		gameStart();
+		$('#start-scene').show();
+		
+		$('#start').click(function() {
+			$('#start-scene').hide();
+			$('#game-scene').show();
+			gameStart();
+		});
 	});
+
 })();

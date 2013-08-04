@@ -16,6 +16,23 @@ body {
     display: none;
 }
 
-#game-scene {
-    display: block;
+#buttons {
+	height: 400px;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+
+#start-scene .button {
+	font-size: 64px;
+	font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	color: white;
+	width: 100%;
+	text-align: center;
+	padding: 20px 0;
+}
+
+#start-scene  .button:hover {
+	cursor: pointer;
+	color: red;
 }

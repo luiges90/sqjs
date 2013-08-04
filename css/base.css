@@ -32,7 +32,40 @@ body {
 	padding: 20px 0;
 }
 
-#start-scene  .button:hover {
+#start-scene  .button:hover, #hiscore-scene  .button:hover {
 	cursor: pointer;
 	color: red;
+}
+
+#table-container {
+	width: 100%;
+	height: 540px;
+}
+
+#hiscore-table {
+	color: white;
+	margin: 0 auto;
+	font-size: 16px;
+	font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	text-align: center;
+	position: relative;
+	top: 20px;
+}
+
+#hiscore-table td, #hiscore-table th {
+	padding: 12px 35px;
+}
+
+#hiscore-table .this-hiscore {
+	color: red;
+}
+
+#hiscore-scene .button {
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	text-align: center;
+	color: white;
+	font-size: 24px;
+	font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 }

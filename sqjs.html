@@ -20,8 +20,8 @@
 
 </head>
 <body>
-	<canvas id="game-scene" class="scene" width="600" height="600">Sorry, but it seems your browser is too old! Try IE 9+, Firefox 3.5+, Chrome or Opera 10.5+</canvas>
-	<div class="scene" id="start-scene">
+	<canvas id="game-scene" class="scene" width="600" height="600">Sorry, but it seems your browser is really old! Try IE 9+, Firefox 3.5+, Chrome or Opera 10.5+</canvas>
+	<div class="scene" id="start-scene" style="display: block">
 		<div id="buttons">
 			<div class="button" id="start">Start</div>
 			<div class="button" id="instruction">Instruction</div>
@@ -31,9 +31,10 @@
 	<div class="scene" id="instruction-scene">
 	</div>
 	<div class="scene" id="hiscore-scene">
-		<table id="hiscore-table">
-			<tr><th>Date</th><th>Wave</th><th>Score</th></tr>
-		</table>
+		<div id="table-container">
+			<table id="hiscore-table">
+			</table>
+		</div>
 		<div class="button" id="back">Back</div>
 	</div>
 </body>

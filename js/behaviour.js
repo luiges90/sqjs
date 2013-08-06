@@ -129,10 +129,24 @@ var Behaviours = (function() {
 
 		counterAttack: function(keys, mouse, player, playerBullet, enemy) {
 			requiredFields.call(this, ['bulletSpeed', 'createBullet', 'aimError']);
+			
+			this.bulletSpread = this.bulletSpread || 1;
+			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
 
 			var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
-			var bullet = this.createBullet(this, velocity);
+			if (player.destroyed) {
+				var angle = randomAngle();
+			} else {
+				var angle = vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError);
+			}
+			for (var i = -this.bulletSpread / 2 + 0.5; i < this.bulletSpread / 2 + 0.5; i += 1) {
+				var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
+
+				var bullet = this.createBullet(this, velocity);
+
+				enemy.push(bullet);
+			}
 
 			enemy.push(bullet);
 		},
@@ -262,6 +276,13 @@ var Behaviours = (function() {
 				var bullet = this.splitTo(this);
 				enemy.push(bullet);
 			}
+		},
+		
+		forceToPlayer: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['toPlayerForce']);
+			
+			var force = vectorFromTo(this.body.GetPosition(), player.body.GetPosition(), this.toPlayerForce);
+			this.body.ApplyImpulse(force, this.body.GetWorldCenter());
 		},
 
 	};

@@ -16,8 +16,16 @@ body {
     display: none;
 }
 
+#title {
+	height: 300px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	text-align: center;
+}
+
 #buttons {
-	height: 400px;
+	height: 300px;
 	width: 100%;
 	position: absolute;
 	bottom: 0;

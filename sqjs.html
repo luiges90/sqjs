@@ -5,8 +5,8 @@
 
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<!--<script language="javascript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>-->
-	<script type="text/javascript" src="lib/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<!--<script type="text/javascript" src="lib/jquery.js"></script>-->
 	<script type="text/javascript" src="lib/Box2dWeb-2.1.a.3.min.js"></script>
 
 	<script type="text/javascript" src="js/box2dHelper.js"></script>
@@ -23,10 +23,13 @@
 <body>
 	<canvas id="game-scene" class="scene" width="600" height="600">Sorry, but it seems your browser is really old! Try IE 9+, Firefox 3.5+, Chrome or Opera 10.5+</canvas>
 	<div class="scene" id="start-scene" style="display: block">
+		<div id="title">
+			<img src="img/title.png">
+		</div>
 		<div id="buttons">
 			<div class="button" id="start">Start</div>
-			<div class="button" id="instruction">Instruction</div>
 			<div class="button" id="hiscore">Hiscore</div>
+			<!--<div class="button" id="create">Create</div>-->
 		</div>
 	</div>
 	<div class="scene" id="instruction-scene">
@@ -38,5 +41,6 @@
 		</div>
 		<div class="button" id="back">Back</div>
 	</div>
+	<a href="https://github.com/luigea90/sqjs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 </body>
 </html>

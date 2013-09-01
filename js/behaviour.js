@@ -76,6 +76,8 @@ var Behaviours = (function() {
 
 					enemy.push(bullet);
 				}
+				
+				AudioPlayer.play('sound/fire.ogg');
 			}
 
 			this.fireCooldownTimer--;
@@ -106,6 +108,8 @@ var Behaviours = (function() {
 
 					enemy.push(bullet);
 				}
+				
+				AudioPlayer.play('sound/fire.ogg');
 			}
 
 			this.fireCooldownTimer--;
@@ -119,6 +123,11 @@ var Behaviours = (function() {
 			}
 
 			this.currentHp--;
+			
+			if (this.currentHp > 0)
+			{
+				AudioPlayer.play('sound/hit.ogg');
+			}
 
 			return this.currentHp > 0;
 		},
@@ -149,10 +158,13 @@ var Behaviours = (function() {
 			}
 
 			enemy.push(bullet);
+			
+			AudioPlayer.play('sound/fire.ogg');
 		},
 
 		teleport: function(keys, mouse, player, playerBullet, enemy) {
 			this.body.SetPosition(randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1));
+			AudioPlayer.play('sound/teleport.ogg');
 		},
 
 		blink: function(keys, mouse, player, playerBullet, enemy) {
@@ -264,6 +276,8 @@ var Behaviours = (function() {
 				this.teleportTimer = this.teleportCooldown;
 
 				this.body.SetPosition(randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1));
+				
+				AudioPlayer.play('sound/teleport.ogg');
 			}
 
 			this.teleportTimer--;

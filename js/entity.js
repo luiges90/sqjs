@@ -55,6 +55,7 @@ var SqEntity = (function(){
 			this.color = options.color || (type === TYPE_ENEMY ? {h: 0, s: 1, l: 0.5, a: 1} : {h: 0, s: 0, l: 0.75, a: 1});
 			this.scoreOnDestroy = typeof options.scoreOnDestroy === 'undefined' ? (this.lifetime <= 0 ? 1 : 0) : options.scoreOnDestroy;
 			this.preventNextWave = typeof options.preventNextWave === 'undefined' ? (type === TYPE_ENEMY) : options.preventNextWave;
+			this.destroySound = options.destroySound;
 
 			this.stepAction = [];
 			this.onHitAction = [];
@@ -77,12 +78,15 @@ var SqEntity = (function(){
 			this.lifetimeTimer--;
 			if (this.lifetimeTimer <= 0 && this.lifetime > 0)
 			{
-				this.destroy();
+				this.destroy(false);
 			}
 		},
 
-		destroy: function() {
+		destroy: function(playSound) {
 			this.destroyed = true;
+			if (playSound && typeof this.destroySound !== 'undefined') {
+				AudioPlayer.play(this.destroySound);
+			}
 		},
 
 		isDestroyed: function() {
@@ -96,7 +100,8 @@ var SqEntity = (function(){
 function createPlayer() {
 	var player = Object.create(SqEntity);
 	player.init(TYPE_PLAYER, new b2Vec2(0, 0), 0.12, {
-		linearDamping: 1.5
+		linearDamping: 1.5,
+		destroySound: 'sound/playerDestroy.ogg'
 	});
 
 	player.invincibleTimer = 0;
@@ -152,6 +157,8 @@ function createPlayer() {
  *                    It is not possible to stop destruction here. Use onHit instead.
  */
 function createEnemy(location, size, options, behaviours, onHit, postHit) {
+	options.destroySound = options.destroySound || 'sound/destroy.ogg';
+
 	var e = Object.create(SqEntity);
 	e.init(TYPE_ENEMY, location, size, options);
 

@@ -83,6 +83,8 @@ var PlayerBehaviours = (function(){
 				var bullet = createPlayerBullet(player, fireVector);
 
 				playerBullet.push(bullet);
+				
+				AudioPlayer.play('sound/playerFire.ogg');
 			}
 
 			this.fireCooldownTimer--;

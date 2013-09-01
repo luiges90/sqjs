@@ -132,7 +132,7 @@ var DEBUG_WAVE = false;
 				}
 
 				p.body.SetLinearVelocity(new b2Vec2(0, 0));
-				p.destroy();
+				p.destroy(true);
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score += a.scoreOnDestroy + b.scoreOnDestroy;
@@ -144,7 +144,7 @@ var DEBUG_WAVE = false;
 				preventDestroy |= a.onHitAction[i].call(a, keys, mouse, player, playerBullet, enemy);
 			}
 			if (!preventDestroy) {
-				a.destroy();
+				a.destroy(true);
 			}
 
 			preventDestroy = false;
@@ -152,7 +152,7 @@ var DEBUG_WAVE = false;
 				preventDestroy |= b.onHitAction[i].call(b, keys, mouse, player, playerBullet, enemy);
 			}
 			if (!preventDestroy) {
-				b.destroy();
+				b.destroy(true);
 			}
 		}
 

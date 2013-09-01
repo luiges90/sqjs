@@ -19,3 +19,6 @@ WASD or arrow keys to move, left mouse button to shoot at mouse position.
 ### Creating enemies ###
 
 Look at `typedWave.js` for an example of wave generator. For help in creating enemies and behaviours, see `entity.js` and `behaviour.js`.
+
+## Credits ##
+SFX generated using [https://github.com/increpare/bfxr](bfxr) and sfxr.

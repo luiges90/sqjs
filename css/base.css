@@ -68,12 +68,17 @@ body {
 	color: red;
 }
 
+.button-container {
+	font-size: 0;
+}
+
 #hiscore-scene .button {
-	width: 100%;
+	width: 50%;
 	height: 60px;
 	line-height: 60px;
 	text-align: center;
 	color: white;
 	font-size: 24px;
 	font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	display: inline-block;
 }

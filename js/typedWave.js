@@ -590,7 +590,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire, Behaviours.autoTeleport], [Behaviours.hp, Behaviours.teleport]);
 
 		e.teleportCooldown = 50;
-		e.fireCooldown = 50;
+		e.fireCooldown = 100;
 		e.aimError = deg2rad(10);
 		e.bulletSpeed = 5;
 		e.hp = 3;
@@ -687,7 +687,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 			color: {h: 10, s: 0.9, l: 0.4, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer], [Behaviours.hp]);
 
-		e.hp = 8;
+		e.hp = 5;
 		e.chaseFactor = 0.06;
 		return e;
 	};

@@ -4,7 +4,7 @@ var world;
 
 var FPS = 60;
 
-var DEBUG_WAVE = 21;
+var DEBUG_WAVE = false;
 
 (function() {
 

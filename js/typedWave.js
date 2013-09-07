@@ -404,7 +404,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 			color: {h: 90, s: 1, l: 0.5, a: 1}
 		}, [Behaviours.alignRotationToMovement, Behaviours.attractBullet], [Behaviours.hp]);
 
-		e.hp = 20;
+		e.hp = 10;
 		e.attractingForce = 0.001;
 
 		return e;
@@ -442,7 +442,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		}, [Behaviours.alignRotationToMovement, Behaviours.sneaky, Behaviours.chasePlayer], [Behaviours.hpImmuneWhenBlink]);
 
 		e.hp = 1;
-		e.sneakyRange = 1;
+		e.sneakyRange = 1.5;
 		e.chaseFactor = 0.05;
 
 		return e;
@@ -578,6 +578,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 
 		e.teleportCooldown = 50;
 		e.hp = 5;
+		e.playSound = 'sound/teleport.ogg';
 
 		return e;
 	};
@@ -716,8 +717,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[9] = [].pushMul(3, hpAimedFiring).pushMul(4, randomFiring);
 	waveData[10] = [].pushMul(3, large).pushMul(3, small);
 	waveData[11] = [].pushMul(3, fast).pushMul(2, large).pushMul(2, small);
-	waveData[12] = [].pushMul(3, large).pushMul(2, hp).pushMul(3, hpAimedFiring);
-	waveData[13] = [].pushMul(3, fast).pushMul(3, small).pushMul(3, chasing);
+	waveData[12] = [].pushMul(3, fast).pushMul(3, small).pushMul(3, chasing);
+	waveData[13] = [].pushMul(3, large).pushMul(2, hp).pushMul(3, hpAimedFiring);
 	waveData[14] = [].pushMul(5, counterAttack);
 	waveData[15] = [].pushMul(3, counterAttack).pushMul(3, chasing).pushMul(2, hpAimedFiring);
 	waveData[16] = [].pushMul(5, chaseFiring);

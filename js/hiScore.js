@@ -9,7 +9,7 @@ var HiScore = (function(){
 		return now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear() + ' ' + zeroPad(now.getHours(), 2) + ':' + zeroPad(now.getMinutes(), 2);
 	};
 	
-	var getDefaultHiScore= function() {
+	var getDefaultHiScore = function() {
 		return [
 				{time: getHiScoreDate(), wave: 0, score: 0},
 				{time: getHiScoreDate(), wave: 0, score: 0},
@@ -62,7 +62,7 @@ var HiScore = (function(){
 			
 			if (hiScore === null){
 				hiScore = getDefaultHiScore();
-				saveHiScore(-1, -1);
+				HiScore.saveHiScore(-1, -1);
 			}
 			
 			var table = $('#hiscore-table');

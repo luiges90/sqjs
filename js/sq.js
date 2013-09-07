@@ -12,6 +12,7 @@ var DEBUG_WAVE = false;
 	var playerBullet = [];
 	var enemy = [];
 	var oldEnemy = [];
+	var powerup = [];
 
 	var lives = 5;
 	var score = 0;
@@ -37,6 +38,7 @@ var DEBUG_WAVE = false;
 		if (pausing) return;
 
 		checkCompleted();
+		generatePowerup();
 
 		world.Step(1/FPS, 3, 2);
 
@@ -85,6 +87,16 @@ var DEBUG_WAVE = false;
 			} else {
 				enemy[i].step(keys, mouse, player, playerBullet, enemy);
 				enemy[i].draw();
+			}
+		}
+
+		for (i = 0; i < powerup.length; ++i) {
+			if (powerup[i].isDestroyed()) {
+				world.DestroyBody(powerup[i].body);
+				powerup.splice(i--, 1);
+			} else {
+				powerup[i].step(keys, mouse, player, playerBullet, enemy);
+				powerup[i].draw();
 			}
 		}
 
@@ -154,6 +166,20 @@ var DEBUG_WAVE = false;
 			if (!preventDestroy) {
 				b.destroy(true);
 			}
+		} else if ((a.type === TYPE_PLAYER && b.type === TYPE_POWERUP) || (a.type === TYPE_POWERUP && b.type === TYPE_PLAYER)) {
+			var p = a.type === TYPE_PLAYER ? a : b;
+			var pu = a.type === TYPE_POWERUP ? a : b;
+
+			switch (pu.puType) {
+				case POWERUP_LIFE: 
+					lives++; 
+					break;
+				case POWERUP_INVINCIBLE:
+					player.invincibleTimer = FPS * 8;
+					break;
+			}
+
+			pu.destroy(true);
 		}
 
 	}
@@ -173,6 +199,12 @@ var DEBUG_WAVE = false;
 			}
 			enemy = generateWave(enemy, wave, player, oldEnemy);
 			oldEnemy = enemy.slice();
+		}
+	}
+	
+	function generatePowerup() {
+		if (Math.random() < 1 / 20 / FPS) {
+			powerup.push(createPowerup(randomLocation(-3, 3, -3, 3), randIntBetween(0, 1), randIntBetween(FPS * 5, FPS * 8)));
 		}
 	}
 

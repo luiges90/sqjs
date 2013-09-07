@@ -3,6 +3,9 @@
 var TYPE_PLAYER = 0;
 var TYPE_ENEMY = 1;
 var TYPE_PLAYER_BULLET = 2;
+var TYPE_POWERUP = 3;
+var POWERUP_LIFE = 0;
+var POWERUP_INVINCIBLE = 1;
 
 /**
  * SqEntity Prototype.
@@ -29,6 +32,15 @@ var SqEntity = (function(){
 		 */
 		init: function(type, position, size, options){
 			options = options || {};
+			
+			var filter;
+			// filterCategory: 1 - player, 2 - enemy, 4 - player bullet, 8 - powerup
+			switch (type) {
+				case TYPE_PLAYER: filter = 2 | 8; break;
+				case TYPE_ENEMY: filter = 1 | 4; break;
+				case TYPE_PLAYER_BULLET: filter = 2; break;
+				case TYPE_POWERUP: filter = 1; break;
+			}
 
 			var shapeOptions = {
 				type: b2Body.b2_dynamicBody,
@@ -37,8 +49,8 @@ var SqEntity = (function(){
 				density: 1,
 				restitution: 0,
 				friction: 0,
-				filterCategory: 1 << type, // player: 001, enemy: 010, bullet: 100
-				filterMask: type == TYPE_ENEMY ? 5 : 2, // 5 = 101, 2 = 010
+				filterCategory: 1 << type, // player: 0001, enemy: 0010, player_bullet: 0100, powerup: 1000
+				filterMask: filter,
 				linearVelocity: options.linearVelocity || new b2Vec2(0, 0)
 			};
 
@@ -189,5 +201,33 @@ function createEnemy(location, size, options, behaviours, onHit, postHit) {
 		canvas.restore();
 	};
 
+	return e;
+}
+
+function createPowerup(location, type, timeout) {
+	var e = Object.create(SqEntity);
+	e.init(TYPE_POWERUP, location, 0.12, {lifetime: timeout, destroySound: 'sound/powerup.ogg'});
+
+	e.puType = type;
+	e.timeout = timeout;
+	
+	switch (type) {
+		case POWERUP_LIFE: e.color = {h: 0, s: 1, l: 1, a: 1}; break;
+		case POWERUP_INVINCIBLE: e.color = {h: 180, s: 1, l: 0.5, a: 1}; break;
+	}
+	
+	e.draw = function(){
+		var canvas = document.getElementById('game-scene').getContext('2d');
+
+		var drawX = this.body.GetPosition().x * 100 + 300;
+		var drawY = -this.body.GetPosition().y * 100 + 300;
+		var drawSize = this.size * 100;
+
+		canvas.beginPath();
+		canvas.strokeStyle = "hsla(" + this.color.h + ", " + this.color.s * 100 + "%, " + this.color.l * 100 + "%, " + this.color.a + ")";
+		canvas.arc(drawX, drawY, drawSize, 0, 2 * Math.PI, true);
+		canvas.stroke();
+	};
+	
 	return e;
 }

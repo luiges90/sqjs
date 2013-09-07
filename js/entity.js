@@ -4,8 +4,6 @@ var TYPE_PLAYER = 0;
 var TYPE_ENEMY = 1;
 var TYPE_PLAYER_BULLET = 2;
 var TYPE_POWERUP = 3;
-var POWERUP_LIFE = 0;
-var POWERUP_INVINCIBLE = 1;
 
 /**
  * SqEntity Prototype.
@@ -204,18 +202,22 @@ function createEnemy(location, size, options, behaviours, onHit, postHit) {
 	return e;
 }
 
-function createPowerup(location, type, timeout) {
+/**
+ * Create a powerup.
+ * @param location Where to place the powerup
+ * @param timeout When the powerup will be gone naturally.
+ * @param color Displayed color of powerup
+ * @param powerup Effect to be done when this powerup is taken by player. Functions are defined in a similar fashion as behaviours. May not create new 
+ *                entity. Returns 'lives+2' to add lives by 2, same goes to wave and score. 
+ */
+function createPowerup(location, timeout, color, powerup) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_POWERUP, location, 0.12, {lifetime: timeout, destroySound: 'sound/powerup.ogg'});
 
-	e.puType = type;
 	e.timeout = timeout;
-	
-	switch (type) {
-		case POWERUP_LIFE: e.color = {h: 0, s: 1, l: 1, a: 1}; break;
-		case POWERUP_INVINCIBLE: e.color = {h: 180, s: 1, l: 0.5, a: 1}; break;
-	}
-	
+	e.color = color;
+	e.powerup = powerup;
+
 	e.draw = function(){
 		var canvas = document.getElementById('game-scene').getContext('2d');
 

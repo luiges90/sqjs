@@ -170,16 +170,22 @@ var DEBUG_WAVE = false;
 			var p = a.type === TYPE_PLAYER ? a : b;
 			var pu = a.type === TYPE_POWERUP ? a : b;
 
-			switch (pu.puType) {
-				case POWERUP_LIFE: 
-					lives++; 
-					break;
-				case POWERUP_INVINCIBLE:
-					player.invincibleTimer = FPS * 8;
-					break;
+			if (!p.destroyed) {
+				var result = pu.powerup(keys, mouse, player, playerBullet, enemy);
+				
+				if (typeof result === 'string') {
+					var matched = result.match(/(lives|score|wave)\+(\d+)/);
+					if (matched) {
+						switch (matched[1]) {
+							case 'lives': lives += parseInt(matched[2]); break;
+							case 'score': score += parseInt(matched[2]); break;
+							case 'wave': wave += parseInt(matched[2]); break;
+						}
+					}
+				}
+				
+				pu.destroy(true);
 			}
-
-			pu.destroy(true);
 		}
 
 	}
@@ -204,7 +210,23 @@ var DEBUG_WAVE = false;
 	
 	function generatePowerup() {
 		if (Math.random() < 1 / 20 / FPS) {
-			powerup.push(createPowerup(randomLocation(-3, 3, -3, 3), randIntBetween(0, 1), randIntBetween(FPS * 5, FPS * 8)));
+			var color, powerupFunc;
+			switch (randIntBetween(0, 1)) {
+				case 0: 
+					color = {h: 0, s: 1, l: 1, a: 1}; 
+					powerupFunc = function(keys, mouse, player, playerBullet, enemy) {
+						return 'lives+1';
+					};
+					break;
+				case 1: 
+					color = {h: 180, s: 1, l: 0.5, a: 1}; 
+					powerupFunc = function(keys, mouse, player, playerBullet, enemy) {
+						player.invincibleTimer = FPS * 6;
+						return true;
+					};
+					break;
+			}
+			powerup.push(createPowerup(randomLocation(-3, 3, -3, 3), randIntBetween(FPS * 5, FPS * 8), color, powerupFunc));
 		}
 	}
 

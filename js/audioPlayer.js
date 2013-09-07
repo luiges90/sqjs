@@ -5,6 +5,12 @@
  */
  
 var AudioPlayer = (function() {
+
+	$(function(){
+		$('audio').on('ended', function(){
+			$(this).addClass('ended');
+		});
+	});
 	
 	return {
 	

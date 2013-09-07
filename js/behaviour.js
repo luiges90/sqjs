@@ -64,6 +64,7 @@ var Behaviours = (function() {
 
 			this.bulletSpread = this.bulletSpread || 1;
 			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
+			this.playSound = typeof this.playSound === 'undefined' ? 'sound/fire.ogg' : this.playSound;
 
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
@@ -77,7 +78,7 @@ var Behaviours = (function() {
 					enemy.push(bullet);
 				}
 				
-				AudioPlayer.play('sound/fire.ogg');
+				AudioPlayer.play(this.playSound);
 			}
 
 			this.fireCooldownTimer--;
@@ -92,6 +93,7 @@ var Behaviours = (function() {
 
 			this.bulletSpread = this.bulletSpread || 1;
 			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
+			this.playSound = typeof this.playSound === 'undefined' ? 'sound/fire.ogg' : this.playSound;
 
 			if (this.fireCooldownTimer <= 0) {
 				this.fireCooldownTimer = this.fireCooldown;
@@ -109,7 +111,7 @@ var Behaviours = (function() {
 					enemy.push(bullet);
 				}
 				
-				AudioPlayer.play('sound/fire.ogg');
+				AudioPlayer.play(this.playSound);
 			}
 
 			this.fireCooldownTimer--;
@@ -122,11 +124,12 @@ var Behaviours = (function() {
 				this.currentHp = this.hp;
 			}
 
+			this.playSound = typeof this.playSound === 'undefined' ? 'sound/hit.ogg' : this.playSound;
 			this.currentHp--;
 			
 			if (this.currentHp > 0)
 			{
-				AudioPlayer.play('sound/hit.ogg');
+				AudioPlayer.play(this.playSound);
 			}
 
 			return this.currentHp > 0;
@@ -141,6 +144,7 @@ var Behaviours = (function() {
 			
 			this.bulletSpread = this.bulletSpread || 1;
 			this.bulletSpreadAngle = this.bulletSpreadAngle || 0;
+			this.playSound = typeof this.playSound === 'undefined' ? 'sound/fire.ogg' : this.playSound;
 
 			var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
@@ -159,7 +163,7 @@ var Behaviours = (function() {
 
 			enemy.push(bullet);
 			
-			AudioPlayer.play('sound/fire.ogg');
+			AudioPlayer.play(this.playSound);
 		},
 
 		teleport: function(keys, mouse, player, playerBullet, enemy) {
@@ -200,12 +204,16 @@ var Behaviours = (function() {
 
 			if (this.blinking) {
 				requiredFields.call(this, ['bulletSpeed', 'createBullet', 'aimError']);
+				
+				this.playSound = typeof this.playSound === 'undefined' ? 'sound/fire.ogg' : this.playSound;
 
 				var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
 				var bullet = this.createBullet(this, velocity);
 
 				enemy.push(bullet);
+				
+				AudioPlayer.play(this.playSound);
 			}
 		},
 
@@ -271,13 +279,15 @@ var Behaviours = (function() {
 			if (typeof this.teleportTimer === 'undefined') {
 				this.teleportTimer = randBetween(0, this.teleportCooldown);
 			}
+			
+			this.playSound = typeof this.playSound === 'undefined' ? 'sound/fire.ogg' : this.playSound;
 
 			if (this.teleportTimer <= 0) {
 				this.teleportTimer = this.teleportCooldown;
 
 				this.body.SetPosition(randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1));
 				
-				AudioPlayer.play('sound/teleport.ogg');
+				AudioPlayer.play(this.playSound);
 			}
 
 			this.teleportTimer--;

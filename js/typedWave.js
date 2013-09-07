@@ -456,6 +456,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 
 		e.fireCooldown = 50;
 		e.bulletSpeed = 0;
+		e.playSound = null;
 		e.createBullet = function(parent, velocity) {
 			var e = createEnemy(parent.body.GetPosition(), 0.06, {
 				linearVelocity: velocity,

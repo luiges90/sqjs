@@ -208,10 +208,19 @@ var DEBUG_WAVE = false;
 		}
 	}
 	
+	var nextLifePowerup = 0;
 	function generatePowerup() {
 		if (Math.random() < 1 / 20 / FPS) {
 			var color, powerupFunc;
-			switch (randIntBetween(0, 1)) {
+			
+			var type = randIntBetween(0, 1);
+			if (type == 0 && score < nextLifePowerup) {
+				type = 1;
+			} else {
+				nextLifePowerup += 100;
+			}
+			
+			switch (type) {
 				case 0: 
 					color = {h: 0, s: 1, l: 1, a: 1}; 
 					powerupFunc = function(keys, mouse, player, playerBullet, enemy) {

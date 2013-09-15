@@ -13,6 +13,8 @@ var DEBUG_WAVE = false;
 	var enemy = [];
 	var oldEnemy = [];
 	var powerup = [];
+	var particles = [];
+	var particleEmitters = [];
 
 	var lives = 5;
 	var score = 0;
@@ -43,6 +45,7 @@ var DEBUG_WAVE = false;
 
 	var keys = {};
 	var mouse = {};
+	var playerParticlesCreated = false;
 	function step(timestamp) {
 		if (pausing) return;
 
@@ -63,9 +66,15 @@ var DEBUG_WAVE = false;
 		if (!player.isDestroyed()) {
 			player.step(keys, mouse, player, playerBullet, enemy);
 			player.draw();
+			playerParticlesCreated = false;
+		} else {
+			if (!playerParticlesCreated) {
+				createExplosionParticles(player, true);
+				playerParticlesCreated = true;
+			}
 		}
 
-		for (i = 0; i < playerBullet.length; ++i) {
+		for (var i = 0; i < playerBullet.length; ++i) {
 			if (playerBullet[i].justHit) {
 				for (var j = 0; j < playerBullet[i].postHitAction.length; ++j) {
 					playerBullet[i].postHitAction[j].call(playerBullet[i], keys, mouse, player, playerBullet, enemy);
@@ -82,7 +91,7 @@ var DEBUG_WAVE = false;
 			}
 		}
 
-		for (i = 0; i < enemy.length; ++i) {
+		for (var i = 0; i < enemy.length; ++i) {
 			if (enemy[i].justHit){
 				for (var j = 0; j < enemy[i].postHitAction.length; ++j) {
 					enemy[i].postHitAction[j].call(enemy[i], keys, mouse, player, playerBullet, enemy);
@@ -91,6 +100,9 @@ var DEBUG_WAVE = false;
 			}
 
 			if (enemy[i].isDestroyed()) {
+				if (enemy[i].generateParticles) {
+					createExplosionParticles(enemy[i]);
+				}
 				world.DestroyBody(enemy[i].body);
 				enemy.splice(i--, 1);
 			} else {
@@ -99,13 +111,36 @@ var DEBUG_WAVE = false;
 			}
 		}
 
-		for (i = 0; i < powerup.length; ++i) {
+		for (var i = 0; i < powerup.length; ++i) {
 			if (powerup[i].isDestroyed()) {
 				world.DestroyBody(powerup[i].body);
 				powerup.splice(i--, 1);
 			} else {
 				powerup[i].step(keys, mouse, player, playerBullet, enemy);
 				powerup[i].draw();
+			}
+		}
+		
+		for (var i = 0; i < particles.length; ++i) {
+			particles[i].lifetime--;
+			if (particles[i].lifetime <= 0){
+				world.DestroyBody(particles[i]);
+				particles.splice(i--, 1);
+			} else {
+				var angle = particles[i].GetAngle();
+				var pCentre = particles[i].GetPosition();
+				var p1 = new b2Vec2(pCentre.x, pCentre.y);
+				p1.Add(rtToVector(particles[i].length / 2, angle));
+				var p2 = new b2Vec2(pCentre.x, pCentre.y);
+				p2.Add(rtToVector(particles[i].length / 2, angle + Math.PI));
+
+				canvas.beginPath();
+				canvas.strokeStyle = "hsla(" + particles[i].color.h + ", " + particles[i].color.s * 100 + "%, " + particles[i].color.l * 100 + "%, 1.0)";
+				canvas.moveTo(p1.x * 100 + 300, -p1.y * 100 + 300);
+				canvas.lineTo(p2.x * 100 + 300, -p2.y * 100 + 300);
+				canvas.lineWidth = 2;
+				canvas.stroke();
+				canvas.lineWidth = 1;
 			}
 		}
 
@@ -123,7 +158,53 @@ var DEBUG_WAVE = false;
 		if (running) {
 			requestAnimFrame( animate );
 			step();
+			emitParticles();
 		}
+	}
+	
+	function emitParticles() {
+		for (var i = 0; i < particleEmitters.length; ++i) {
+			particleEmitters[i].lifetime--;
+			if (particleEmitters[i].lifetime <= 0) {
+				particleEmitters.splice(i--, 1);
+			} else {
+				var count = randBetween(4, 6);
+				for (var j = 0; j < count; ++j) {
+					var dir = randomAngle();
+					var length = randBetween(0.05, 0.2);
+					
+					var start = particleEmitters[i].position;
+					start.Add(new b2Vec2(randBetween(-0.02, 0.02), randBetween(-0.02, 0.02)));
+					
+					var end = new b2Vec2(start.x, start.y);
+					end.Add(rtToVector(length, dir));
+					
+					var body = addEdgeShape(world, start, end,
+								{
+									type: b2Body.b2_kinematicBody,
+									linearDamping: 0,
+									filterCategory: 0,
+									filterMask: 0,
+									linearVelocity: rtToVector(5, dir),
+									angle: dir,
+									fixedRotation: true,
+								});
+					body.length = length;
+					body.color = particleEmitters[i].isPlayer ? {h: randBetween(0, 360), s: 1, l: 0.5, a: 1} : particleEmitters[i].color;
+					body.lifetime = randBetween(20, 30);
+					particles.push(body);
+				}
+			}
+		}
+	}
+	
+	function createExplosionParticles(entity, isPlayer) {
+		particleEmitters.push({
+			position: entity.body.GetPosition(), 
+			color: entity.color,
+			isPlayer: isPlayer, 
+			lifetime: isPlayer ? 90 : 5
+		});
 	}
 	
 	function initStats() {
@@ -133,36 +214,38 @@ var DEBUG_WAVE = false;
 	}
 	
 	function storeStats() {
-		var oldKilledInWave = JSON.parse(localStorage.getItem(KILLED_IN_WAVE_COUNT_KEY)) || [];
-		if (oldKilledInWave[wave]) {
-			oldKilledInWave[wave] += killedInWave;
-		} else {
-			oldKilledInWave[wave] = killedInWave;
-		}
-		localStorage.setItem(KILLED_IN_WAVE_COUNT_KEY, JSON.stringify(oldKilledInWave));
+		if (!DEBUG_WAVE){
+			var oldKilledInWave = JSON.parse(localStorage.getItem(KILLED_IN_WAVE_COUNT_KEY)) || [];
+			if (oldKilledInWave[wave]) {
+				oldKilledInWave[wave] += killedInWave;
+			} else {
+				oldKilledInWave[wave] = killedInWave;
+			}
+			localStorage.setItem(KILLED_IN_WAVE_COUNT_KEY, JSON.stringify(oldKilledInWave));
 
-		var oldPowerupGenerated = JSON.parse(localStorage.getItem(POWERUP_GENERATED_KEY)) || [0, 0];
-		for (var i = 0; i < 2; ++i){
-			oldPowerupGenerated[i] += powerupGenerated[i];
-		};
-		localStorage.setItem(POWERUP_GENERATED_KEY, JSON.stringify(oldPowerupGenerated));
-		
-		var oldPowerupTaken = JSON.parse(localStorage.getItem(POWERUP_TAKEN_KEY)) || [0, 0];
-		for (var i = 0; i < 2; ++i){
-			oldPowerupTaken[i] += powerupTaken[i];
-		};
-		localStorage.setItem(POWERUP_TAKEN_KEY, JSON.stringify(oldPowerupTaken));
-		
-		var oldWaveReached = JSON.parse(localStorage.getItem(WAVE_REACHED_KEY)) || [];
-		if (oldWaveReached[wave]) {
-			oldWaveReached[wave]++;
-		} else {
-			oldWaveReached[wave] = 1;
-		}
-		localStorage.setItem(WAVE_REACHED_KEY, JSON.stringify(oldWaveReached));
-		
-		if (typeof enemyStoreStat === 'function') {
-			enemyStoreStat(enemy, wave, player, oldEnemy);
+			var oldPowerupGenerated = JSON.parse(localStorage.getItem(POWERUP_GENERATED_KEY)) || [0, 0];
+			for (var i = 0; i < 2; ++i){
+				oldPowerupGenerated[i] += powerupGenerated[i];
+			};
+			localStorage.setItem(POWERUP_GENERATED_KEY, JSON.stringify(oldPowerupGenerated));
+			
+			var oldPowerupTaken = JSON.parse(localStorage.getItem(POWERUP_TAKEN_KEY)) || [0, 0];
+			for (var i = 0; i < 2; ++i){
+				oldPowerupTaken[i] += powerupTaken[i];
+			};
+			localStorage.setItem(POWERUP_TAKEN_KEY, JSON.stringify(oldPowerupTaken));
+			
+			var oldWaveReached = JSON.parse(localStorage.getItem(WAVE_REACHED_KEY)) || [];
+			if (oldWaveReached[wave]) {
+				oldWaveReached[wave]++;
+			} else {
+				oldWaveReached[wave] = 1;
+			}
+			localStorage.setItem(WAVE_REACHED_KEY, JSON.stringify(oldWaveReached));
+			
+			if (typeof enemyStoreStat === 'function') {
+				enemyStoreStat(enemy, wave, player, oldEnemy);
+			}
 		}
 	}
 

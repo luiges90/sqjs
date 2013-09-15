@@ -64,6 +64,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -89,6 +90,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -125,6 +127,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -181,6 +184,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 100,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
 		};
@@ -206,6 +210,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -254,6 +259,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 100,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -294,6 +300,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -317,6 +324,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -342,6 +350,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -377,6 +386,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -400,6 +410,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: -1,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -424,6 +435,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 100,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
 		};
@@ -502,6 +514,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: -1,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement, Behaviours.sneaky], [Behaviours.hpImmuneWhenBlink]);
 
@@ -530,6 +543,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -557,6 +571,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -580,6 +595,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer]);
 			f.chaseFactor = 0.05;
@@ -605,6 +621,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -645,6 +662,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -670,6 +688,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};
@@ -696,6 +715,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 100,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement], [Behaviours.indestructible]);
 		};
@@ -721,6 +741,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				scoreOnDestroy: 0,
 				lifetime: 60,
 				preventNextWave: false,
+				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement]);
 		};

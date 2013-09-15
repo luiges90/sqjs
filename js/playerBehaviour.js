@@ -11,7 +11,8 @@ var PlayerBehaviours = (function(){
 		var bullet = Object.create(SqEntity);
 		bullet.init(TYPE_PLAYER_BULLET, new b2Vec2(parent.body.GetPosition().x, parent.body.GetPosition().y), 0.06, {
 			lifetime: 60,
-			linearVelocity: fireVector
+			linearVelocity: fireVector,
+			generateParticles: false
 		});
 
 		bullet.draw = function(){

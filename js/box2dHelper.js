@@ -54,8 +54,8 @@ function addShape(world, positionVector, options, addShapeFunc){
 			fd[i] = options[i];
 		}
 	}
-	fd.filter.categoryBits = options.filterCategory || 0xFFFF;
-	fd.filter.maskBits = options.filterMask || 0xFFFF;
+	fd.filter.categoryBits = (typeof options.filterCategory === 'undefined') ? 0xFFFF : options.filterCategory;
+	fd.filter.maskBits = (typeof options.filterMask === 'undefined') ? 0xFFFF : options.filterMask;
 	fd.isSensor = options.sensor || false;
 
 	body.CreateFixture(fd);
@@ -64,10 +64,11 @@ function addShape(world, positionVector, options, addShapeFunc){
 	return body;
 }
 
-function addEdgeShape(world, v1, v2, options) {
-	return addShape(world, new b2Vec2(0, 0), options, function(){
+function addEdgeShape(world, start, end, options) {
+	return addShape(world, new b2Vec2((start.x + end.x) / 2, (start.y + end.y) / 2), options, function(){
 		var shape = new b2PolygonShape();
-		shape.SetAsEdge(v1, v2);
+		shape.SetAsEdge(new b2Vec2(start.x - (start.x + end.x) / 2, start.y - (start.y + end.y) / 2), 
+						new b2Vec2(end.x - (start.x + end.x) / 2, end.y - (start.y + end.y) / 2));
 		return shape;
 	});
 }

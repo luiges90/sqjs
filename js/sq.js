@@ -216,7 +216,7 @@ var DEBUG_WAVE = false;
 			var type = randIntBetween(0, 1);
 			if (type == 0 && score < nextLifePowerup) {
 				type = 1;
-			} else {
+			} else if (type == 0) {
 				nextLifePowerup += 100;
 			}
 			

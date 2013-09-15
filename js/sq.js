@@ -351,7 +351,7 @@ var DEBUG_WAVE = false;
 		
 		$('#hiscore').click(HiScore.showHiScore);
 		
-		deadWaveCount = JSON.parse(localStorage.getItem(DEAD_WAVE_COUNT_KEY)) || [0];
+		deadWaveCount = JSON.parse(localStorage.getItem(DEAD_WAVE_COUNT_KEY)) || [0, 0];
 	});
 	
 	window.onbeforeunload = function() {

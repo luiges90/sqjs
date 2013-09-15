@@ -228,7 +228,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var teleporting = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 60, s: 1, l: 0.55, a: 1}
+			color: {h: 60, s: 1, l: 0.55, a: 1},
+			name: 'teleporting'
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp], [Behaviours.teleport]);
 
 		e.hp = 3;

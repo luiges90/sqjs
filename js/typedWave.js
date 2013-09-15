@@ -578,7 +578,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				linearVelocity: velocity,
 				color: parent.color,
 				scoreOnDestroy: 0,
-				lifetime: 100,
+				lifetime: 60,
 				preventNextWave: false,
 				destroySound: 'sound/bulletDestroy.ogg'
 			}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer]);

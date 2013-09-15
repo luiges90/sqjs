@@ -74,6 +74,7 @@ var Behaviours = (function() {
 					var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
 					var bullet = this.createBullet(this, velocity);
+					bullet.parent = this;
 
 					enemy.push(bullet);
 				}
@@ -107,6 +108,7 @@ var Behaviours = (function() {
 					var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
 					var bullet = this.createBullet(this, velocity);
+					bullet.parent = this;
 
 					enemy.push(bullet);
 				}
@@ -157,6 +159,7 @@ var Behaviours = (function() {
 				var velocity = rtToVector(this.bulletSpeed, angle + i * this.bulletSpreadAngle);
 
 				var bullet = this.createBullet(this, velocity);
+				bullet.parent = this;
 
 				enemy.push(bullet);
 			}
@@ -210,6 +213,7 @@ var Behaviours = (function() {
 				var velocity = rtToVector(this.bulletSpeed, vectorAngle(vectorFromTo(this.body.GetPosition(), player.body.GetPosition())) + randBetween(-this.aimError, this.aimError));
 
 				var bullet = this.createBullet(this, velocity);
+				bullet.parent = this;
 
 				enemy.push(bullet);
 				

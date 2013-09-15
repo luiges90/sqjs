@@ -66,6 +66,8 @@ var SqEntity = (function(){
 			this.scoreOnDestroy = typeof options.scoreOnDestroy === 'undefined' ? (this.lifetime <= 0 ? 1 : 0) : options.scoreOnDestroy;
 			this.preventNextWave = typeof options.preventNextWave === 'undefined' ? (type === TYPE_ENEMY) : options.preventNextWave;
 			this.destroySound = options.destroySound;
+			this.kills = 0;
+			this.parent = null;
 
 			this.stepAction = [];
 			this.onHitAction = [];

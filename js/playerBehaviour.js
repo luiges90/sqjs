@@ -81,6 +81,7 @@ var PlayerBehaviours = (function(){
 				var fireVector = vectorFromTo(player.body.GetPosition(), position, 5);
 
 				var bullet = createPlayerBullet(player, fireVector);
+				bullet.parent = this;
 
 				playerBullet.push(bullet);
 				

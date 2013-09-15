@@ -8,7 +8,6 @@
  * @param oldEnemy All generated enemies of last wave.
  */
 function generateWave(enemy, wave, player, oldEnemy) {
-
 	var getEnemyPosition = function() {
 		return randomLocationAvoidRadius(-3 + 0.4, 3 - 0.4, -3 + 0.4, 3 - 0.4, player.body.GetPosition(), 1);
 	};

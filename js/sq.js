@@ -137,6 +137,7 @@ var DEBUG_WAVE = false;
 
 		if ((a.type === TYPE_ENEMY && b.type === TYPE_PLAYER) || (a.type === TYPE_PLAYER && b.type === TYPE_ENEMY)) {
 			var p = a.type === TYPE_PLAYER ? a : b;
+			var e = a.type === TYPE_PLAYER ? b : a;
 
 			if (!p.isInvincible() && !p.isDestroyed()) {
 				lives--;
@@ -150,11 +151,21 @@ var DEBUG_WAVE = false;
 				p.destroy(true);
 				deadWaveCount[wave]++;
 				localStorage.setItem(DEAD_WAVE_COUNT_KEY, JSON.stringify(deadWaveCount));
+				
+				if (e.parent) {
+					e.parent.kills++;
+				} else {
+					e.kills++;
+				}
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score += a.scoreOnDestroy + b.scoreOnDestroy;
 			a.justHit = true;
 			b.justHit = true;
+			
+			if (a.lifetime < 0 || b.lifetime < 0){
+				player.kills++;
+			}
 
 			var preventDestroy = false;
 			for (var i = 0; i < a.onHitAction.length; ++i) {
@@ -171,6 +182,7 @@ var DEBUG_WAVE = false;
 			if (!preventDestroy) {
 				b.destroy(true);
 			}
+
 		} else if ((a.type === TYPE_PLAYER && b.type === TYPE_POWERUP) || (a.type === TYPE_POWERUP && b.type === TYPE_PLAYER)) {
 			var p = a.type === TYPE_PLAYER ? a : b;
 			var pu = a.type === TYPE_POWERUP ? a : b;

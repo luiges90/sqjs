@@ -214,11 +214,9 @@ var DEBUG_WAVE = false;
 			var color, powerupFunc;
 			
 			var type = randIntBetween(0, 1);
-			if (type == 0 && score < nextLifePowerup) {
+			if (type === 0 && score < nextLifePowerup) {
 				type = 1;
-			} else if (type == 0) {
-				nextLifePowerup += 100;
-			}
+			} 
 			
 			switch (type) {
 				case 0: 
@@ -226,6 +224,7 @@ var DEBUG_WAVE = false;
 					powerupFunc = function(keys, mouse, player, playerBullet, enemy) {
 						return 'lives+1';
 					};
+					nextLifePowerup += 100;
 					break;
 				case 1: 
 					color = {h: 180, s: 1, l: 0.5, a: 1}; 

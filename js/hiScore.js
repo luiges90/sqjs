@@ -11,18 +11,20 @@ var HiScore = (function(){
 	
 	var getDefaultHiScore = function() {
 		return [
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
-				{time: getHiScoreDate(), wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
+				{time: '1-1-2000 00:00', wave: 0, score: 0},
 			];
 	};
+	
+	var storedHiScore = null;
 	
 	return {
 
@@ -57,25 +59,47 @@ var HiScore = (function(){
 			return pos;
 		},
 		
+		clearHiScore: function() {
+			storedHiScore = localStorage.getItem(HISCORE_KEY);
+			localStorage.removeItem(HISCORE_KEY);
+		},
+		
+		undoClearHiScore: function() {
+			localStorage.setItem(HISCORE_KEY, storedHiScore);
+		},
+		
 		showHiScore: function(highlight) {
-			var hiScore = HiScore.loadHiScore();
+			var table = $('.hiscore-table');
+			var updateTable = function(){
+				var hiScore = HiScore.loadHiScore();
 			
-			if (hiScore === null){
-				hiScore = getDefaultHiScore();
-				HiScore.saveHiScore(-1, -1);
-			}
+				if (hiScore === null){
+					hiScore = getDefaultHiScore();
+					HiScore.saveHiScore(-1, -1);
+				}
 			
-			var table = $('#hiscore-table');
-			table.empty().append('<tr><th>Rank</th><th>Date</th><th>Wave</th><th>Score</th></tr>');
-			$.each(hiScore, function(i) {
-				table.append('<tr class="' + (i === highlight ? 'this-hiscore' : '') + '"><td>' + (i+1) + '</td><td>' + this.time + '</td><td>' + this.wave + '</td><td>' + this.score + '</td></tr>');
-			});
+				table.empty().append('<tr><th>Rank</th><th>Date</th><th>Wave</th><th>Score</th></tr>');
+				$.each(hiScore, function(i) {
+					table.append('<tr class="' + (i === highlight ? 'this-hiscore' : '') + '"><td>' + (i+1) + '</td><td>' + this.time + '</td><td>' + this.wave + '</td><td>' + this.score + '</td></tr>');
+				});
+			};
+			updateTable();
 			
 			$('.scene').hide();
 			$('#hiscore-scene').show();
-			$('#back').one('click', function() {
+			$('#hiscore-scene .back').one('click', function() {
 				$('#hiscore-scene').hide();
 				$('#start-scene').show();
+			});
+			
+			$('#hiscore-scene .clear').one('click', function clickClear() {
+				HiScore.clearHiScore();
+				updateTable();
+				$('#hiscore-scene .clear').text('Undo').removeClass('clear').addClass('undo').one('click', function(){
+					HiScore.undoClearHiScore();
+					updateTable();
+					$('#hiscore-scene .undo').text('Clear').removeClass('undo').addClass('clear').one('click', clickClear);
+				});
 			});
 		},
 		

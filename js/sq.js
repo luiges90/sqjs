@@ -17,6 +17,9 @@ var DEBUG_WAVE = false;
 	var lives = 5;
 	var score = 0;
 	var wave = 1;
+	
+	var deadWaveCount = [];
+	var DEAD_WAVE_COUNT_KEY = 'sq_dead_wave_count';
 
 	var pausing = false;
 	var running = false;
@@ -145,6 +148,8 @@ var DEBUG_WAVE = false;
 
 				p.body.SetLinearVelocity(new b2Vec2(0, 0));
 				p.destroy(true);
+				deadWaveCount[wave]++;
+				localStorage.setItem(DEAD_WAVE_COUNT_KEY, JSON.stringify(deadWaveCount));
 			}
 		} else if ((a.type === TYPE_PLAYER_BULLET && b.type === TYPE_ENEMY) || (a.type === TYPE_ENEMY && b.type === TYPE_PLAYER_BULLET)) {
 			score += a.scoreOnDestroy + b.scoreOnDestroy;
@@ -203,8 +208,11 @@ var DEBUG_WAVE = false;
 			if (wave % 5 === 0){
 				lives++;
 			}
+			
 			enemy = generateWave(enemy, wave, player, oldEnemy);
 			oldEnemy = enemy.slice();
+			
+			if (!deadWaveCount[wave]) deadWaveCount[wave] = 0;
 		}
 	}
 	
@@ -342,6 +350,8 @@ var DEBUG_WAVE = false;
 		});
 		
 		$('#hiscore').click(HiScore.showHiScore);
+		
+		deadWaveCount = JSON.parse(localStorage.getItem(DEAD_WAVE_COUNT_KEY)) || [0];
 	});
 	
 	window.onbeforeunload = function() {

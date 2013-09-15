@@ -25,6 +25,7 @@ var DEBUG_WAVE = false;
 	var KILLED_IN_WAVE_COUNT_KEY = 'sq_killed_in_wave_count';
 	var POWERUP_GENERATED_KEY = 'sq_powerup_generated';
 	var POWERUP_TAKEN_KEY = 'sq_powerup_taken';
+	var WAVE_REACHED_KEY = 'sq_wave_reached';
 
 	var pausing = false;
 	var running = false;
@@ -151,6 +152,14 @@ var DEBUG_WAVE = false;
 			oldPowerupTaken[i] += powerupTaken[i];
 		};
 		localStorage.setItem(POWERUP_TAKEN_KEY, JSON.stringify(oldPowerupTaken));
+		
+		var oldWaveReached = JSON.parse(localStorage.getItem(WAVE_REACHED_KEY)) || [];
+		if (oldWaveReached[wave]) {
+			oldWaveReached[wave]++;
+		} else {
+			oldWaveReached[wave] = 1;
+		}
+		localStorage.setItem(WAVE_REACHED_KEY, JSON.stringify(oldWaveReached));
 		
 		if (typeof enemyStoreStat === 'function') {
 			enemyStoreStat(enemy, wave, player, oldEnemy);

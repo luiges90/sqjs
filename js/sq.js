@@ -18,8 +18,13 @@ var DEBUG_WAVE = false;
 	var score = 0;
 	var wave = 1;
 	
-	var deadWaveCount = [];
-	var DEAD_WAVE_COUNT_KEY = 'sq_dead_wave_count';
+	var killedInWave;
+	var powerupGenerated;
+	var powerupTaken;
+	
+	var KILLED_IN_WAVE_COUNT_KEY = 'sq_killed_in_wave_count';
+	var POWERUP_GENERATED_KEY = 'sq_powerup_generated';
+	var POWERUP_TAKEN_KEY = 'sq_powerup_taken';
 
 	var pausing = false;
 	var running = false;
@@ -119,6 +124,38 @@ var DEBUG_WAVE = false;
 			step();
 		}
 	}
+	
+	function initStats() {
+		killedInWave = 0;
+		powerupGenerated = [0, 0];
+		powerupTaken = [0, 0];
+	}
+	
+	function storeStats() {
+		var oldKilledInWave = JSON.parse(localStorage.getItem(KILLED_IN_WAVE_COUNT_KEY)) || [];
+		if (oldKilledInWave[wave]) {
+			oldKilledInWave[wave] += killedInWave;
+		} else {
+			oldKilledInWave[wave] = killedInWave;
+		}
+		localStorage.setItem(KILLED_IN_WAVE_COUNT_KEY, JSON.stringify(oldKilledInWave));
+
+		var oldPowerupGenerated = JSON.parse(localStorage.getItem(POWERUP_GENERATED_KEY)) || [0, 0];
+		for (var i = 0; i < 2; ++i){
+			oldPowerupGenerated[i] += powerupGenerated[i];
+		};
+		localStorage.setItem(POWERUP_GENERATED_KEY, JSON.stringify(oldPowerupGenerated));
+		
+		var oldPowerupTaken = JSON.parse(localStorage.getItem(POWERUP_TAKEN_KEY)) || [0, 0];
+		for (var i = 0; i < 2; ++i){
+			oldPowerupTaken[i] += powerupTaken[i];
+		};
+		localStorage.setItem(POWERUP_TAKEN_KEY, JSON.stringify(oldPowerupTaken));
+		
+		if (typeof enemyStoreStat === 'function') {
+			enemyStoreStat(enemy, wave, player, oldEnemy);
+		}
+	}
 
 	function onPreSolve(contact, oldManifold) {
 		var a = contact.GetFixtureA().GetBody().GetUserData();
@@ -149,8 +186,8 @@ var DEBUG_WAVE = false;
 
 				p.body.SetLinearVelocity(new b2Vec2(0, 0));
 				p.destroy(true);
-				deadWaveCount[wave]++;
-				localStorage.setItem(DEAD_WAVE_COUNT_KEY, JSON.stringify(deadWaveCount));
+				
+				killedInWave++;
 				
 				if (e.parent) {
 					e.parent.kills++;
@@ -188,6 +225,7 @@ var DEBUG_WAVE = false;
 			var pu = a.type === TYPE_POWERUP ? a : b;
 
 			if (!p.destroyed) {
+				powerupTaken[pu.puType]++;
 				var result = pu.powerup(keys, mouse, player, playerBullet, enemy);
 				
 				if (typeof result === 'string') {
@@ -204,7 +242,6 @@ var DEBUG_WAVE = false;
 				pu.destroy(true);
 			}
 		}
-
 	}
 
 	function checkCompleted() {
@@ -216,15 +253,16 @@ var DEBUG_WAVE = false;
 		});
 
 		if (completed){
+			storeStats();
+		
+			initStats();
 			wave++;
 			if (wave % 5 === 0){
 				lives++;
 			}
-			
+
 			enemy = generateWave(enemy, wave, player, oldEnemy);
 			oldEnemy = enemy.slice();
-			
-			if (!deadWaveCount[wave]) deadWaveCount[wave] = 0;
 		}
 	}
 	
@@ -238,6 +276,7 @@ var DEBUG_WAVE = false;
 				type = 1;
 			} 
 			
+			powerupGenerated[type]++;
 			switch (type) {
 				case 0: 
 					color = {h: 0, s: 1, l: 1, a: 1}; 
@@ -254,18 +293,20 @@ var DEBUG_WAVE = false;
 					};
 					break;
 			}
-			powerup.push(createPowerup(randomLocation(-3, 3, -3, 3), randIntBetween(FPS * 5, FPS * 8), color, powerupFunc));
+			powerup.push(createPowerup(randomLocation(-3, 3, -3, 3), randIntBetween(FPS * 5, FPS * 8), color, type, powerupFunc));
 		}
 	}
 
 	function gameover() {
+		storeStats();
+	
 		running = false;
 		world = null;
 		player = null;
 		playerBullet = [];
 		enemy = [];
 		oldEnemy = [];
-		
+
 		var pos = HiScore.saveHiScore(wave, score);
 		
 		lives = 5;
@@ -342,6 +383,7 @@ var DEBUG_WAVE = false;
 		player = createPlayer();
 
 		initControl();
+		initStats();
 
 		running = true;
 		enemy = generateWave(enemy, wave, player, oldEnemy);
@@ -362,8 +404,6 @@ var DEBUG_WAVE = false;
 		});
 		
 		$('#hiscore').click(HiScore.showHiScore);
-		
-		deadWaveCount = JSON.parse(localStorage.getItem(DEAD_WAVE_COUNT_KEY)) || [0, 0];
 	});
 	
 	window.onbeforeunload = function() {

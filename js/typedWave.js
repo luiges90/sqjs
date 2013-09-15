@@ -1,5 +1,17 @@
 "use strict";
 
+function enemyStoreStat(enemy, wave, player, oldEnemy) {
+	var ENEMY_TYPE_KILL_COUNT = 'sq_enemy_type_kill_count';
+	var typedKillCount = JSON.parse(localStorage.getItem(ENEMY_TYPE_KILL_COUNT)) || {};
+
+	$.each(oldEnemy, function(){
+		if (!typedKillCount[this.name]) typedKillCount[this.name] = 0;
+		typedKillCount[this.name] += this.kills;
+	});
+	
+	localStorage.setItem(ENEMY_TYPE_KILL_COUNT, JSON.stringify(typedKillCount));
+}
+
 /**
  * Wave generator
  * @param enemy Enemy array left in the field. Add new enemies to this array.
@@ -16,7 +28,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		var e = createEnemy(parent ? parent.body.GetPosition() : getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 0, s: 1, l: 0.5, a: 1},
-			scoreOnDestroy: parent ? 0 : 1
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'simple'
 		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
@@ -26,7 +39,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		var e = createEnemy(parent ? parent.body.GetPosition() : getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 10, s: 1, l: 0.5, a: 1},
-			scoreOnDestroy: parent ? 0 : 1
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'chasing'
 		}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer]);
 
 		e.chaseFactor = 0.02;
@@ -37,7 +51,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		var e = createEnemy(parent ? parent.body.GetPosition() : getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 20, s: 1, l: 0.5, a: 1},
-			scoreOnDestroy: parent ? 0 : 1
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'randomFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 100;
@@ -60,7 +75,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		var e = createEnemy(parent ? parent.body.GetPosition() : getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 30, s: 1, l: 0.5, a: 1},
-			scoreOnDestroy: parent ? 0 : 1
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'aimedFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire]);
 
 		e.fireCooldown = 100;
@@ -83,7 +99,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hp = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 0, s: 1, l: 0.55, a: 1}
+			color: {h: 0, s: 1, l: 0.55, a: 1},
+			name: 'hp'
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
 
 		e.hp = 3;
@@ -94,7 +111,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpAimedFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 30, s: 1, l: 0.55, a: 1}
+			color: {h: 30, s: 1, l: 0.55, a: 1},
+			name: 'hpAimedFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
 
 		e.fireCooldown = 100;
@@ -118,7 +136,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var large = function(){
 		var e = createEnemy(getEnemyPosition(), 0.4, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 0, s: 1, l: 0.6, a: 1}
+			color: {h: 0, s: 1, l: 0.6, a: 1},
+			name: 'large'
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
 
 		e.hp = 5;
@@ -129,7 +148,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var small = function(){
 		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 0, s: 1, l: 0.45, a: 1}
+			color: {h: 0, s: 1, l: 0.45, a: 1},
+			name: 'small'
 		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
@@ -138,7 +158,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var fast = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(6, randomAngle()),
-			color: {h: 0, s: 0.9, l: 0.5, a: 1}
+			color: {h: 0, s: 0.9, l: 0.5, a: 1},
+			name: 'fast'
 		}, [Behaviours.alignRotationToMovement]);
 
 		return e;
@@ -147,7 +168,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var counterAttack = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 40, s: 1, l: 0.5, a: 1}
+			color: {h: 40, s: 1, l: 0.5, a: 1},
+			name: 'counterAttack'
 		}, [Behaviours.alignRotationToMovement], [], [Behaviours.counterAttack]);
 
 		e.aimError = 0;
@@ -169,7 +191,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var chaseFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 50, s: 1, l: 0.5, a: 1}
+			color: {h: 50, s: 1, l: 0.5, a: 1},
+			name: 'chaseFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire, Behaviours.chasePlayer]);
 
 		e.chaseFactor = 0.03;
@@ -193,7 +216,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 10, s: 1, l: 0.55, a: 1}
+			color: {h: 10, s: 1, l: 0.55, a: 1},
+			name: 'hpChasing'
 		}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer], [Behaviours.hp]);
 
 		e.chaseFactor = 0.05;
@@ -215,7 +239,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpCounterAttack = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 40, s: 1, l: 0.55, a: 1}
+			color: {h: 40, s: 1, l: 0.55, a: 1},
+			name: 'hpCounterAttack'
 		}, [Behaviours.alignRotationToMovement], [Behaviours.hp], [Behaviours.counterAttack]);
 
 		e.hp = 5;
@@ -238,7 +263,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var blinking = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 70, s: 1, l: 0.5, a: 1}
+			color: {h: 70, s: 1, l: 0.5, a: 1},
+			name: 'blinking'
 		}, [Behaviours.alignRotationToMovement, Behaviours.blink], [Behaviours.hp]);
 
 		e.hp = 3;
@@ -251,7 +277,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var blinkingCounterAttack = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 70, s: 0.9, l: 0.5, a: 1}
+			color: {h: 70, s: 0.9, l: 0.5, a: 1},
+			name: 'blinkingCounterAttack'
 		}, [Behaviours.alignRotationToMovement, Behaviours.blink], [Behaviours.hpImmuneWhenBlink], [Behaviours.counterAttackOnBlink]);
 
 		e.hp = 1;
@@ -276,7 +303,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var frequentRandomFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 20, s: 0.9, l: 0.5, a: 1}
+			color: {h: 20, s: 0.9, l: 0.5, a: 1},
+			name: 'frequentRandomFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 40;
@@ -298,7 +326,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var randomFiring3 = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 20, s: 0.8, l: 0.5, a: 1}
+			color: {h: 20, s: 0.8, l: 0.5, a: 1},
+			name: 'randomFiring3'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 100;
@@ -322,7 +351,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var smallChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 10, s: 1, l: 0.45, a: 1}
+			color: {h: 10, s: 1, l: 0.45, a: 1},
+			name: 'smallChasing'
 		}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer]);
 
 		e.chaseFactor = 0.06;
@@ -332,7 +362,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var largeFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.4, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 30, s: 1, l: 0.7, a: 1}
+			color: {h: 30, s: 1, l: 0.7, a: 1},
+			name: 'largeFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire], [Behaviours.hp]);
 
 		e.fireCooldown = 100;
@@ -355,7 +386,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var mineLayer = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 80, s: 1, l: 0.5, a: 1}
+			color: {h: 80, s: 1, l: 0.5, a: 1},
+			name: 'mineLayer'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 50;
@@ -377,7 +409,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var indestructibleFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 30, s: 0.8, l: 0.5, a: 1}
+			color: {h: 30, s: 0.8, l: 0.5, a: 1},
+			name: 'indestructibleFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire]);
 
 		e.fireCooldown = 100;
@@ -400,7 +433,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var bulletAttractor = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 90, s: 1, l: 0.5, a: 1}
+			color: {h: 90, s: 1, l: 0.5, a: 1},
+			name: 'bulletAttractor'
 		}, [Behaviours.alignRotationToMovement, Behaviours.attractBullet], [Behaviours.hp]);
 
 		e.hp = 10;
@@ -412,7 +446,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var bulletRepulsor = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 100, s: 1, l: 0.5, a: 1}
+			color: {h: 100, s: 1, l: 0.5, a: 1},
+			name: 'bulletRepulsor'
 		}, [Behaviours.alignRotationToMovement, Behaviours.repelBullet]);
 
 		e.repellingForce = 0.001;
@@ -423,7 +458,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var generator = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 110, s: 1, l: 0.5, a: 1}
+			color: {h: 110, s: 1, l: 0.5, a: 1},
+			name: 'generator'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire], [Behaviours.hp]);
 
 		e.fireCooldown = 100;
@@ -437,7 +473,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var sneaky = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(2, randomAngle()),
-			color: {h: 120, s: 1, l: 0.5, a: 1}
+			color: {h: 120, s: 1, l: 0.5, a: 1},
+			name: 'sneaky'
 		}, [Behaviours.alignRotationToMovement, Behaviours.sneaky, Behaviours.chasePlayer], [Behaviours.hpImmuneWhenBlink]);
 
 		e.hp = 1;
@@ -450,7 +487,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var sneakyMineLayer = function() {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 80, s: 1, l: 0.6, a: 1}
+			color: {h: 80, s: 1, l: 0.6, a: 1},
+			name: 'sneakyMineLayer'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 50;
@@ -478,7 +516,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var fastRandomFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(6, randomAngle()),
-			color: {h: 20, s: 0.7, l: 0.5, a: 1}
+			color: {h: 20, s: 0.7, l: 0.5, a: 1},
+			name: 'fastRandomFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 40;
@@ -500,7 +539,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpAimedFiring3 = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 30, s: 0.8, l: 0.6, a: 1}
+			color: {h: 30, s: 0.8, l: 0.6, a: 1},
+			name: 'hpAimedFiring3'
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
 
 		e.fireCooldown = 100;
@@ -526,7 +566,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var fireChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 130, s: 1, l: 0.5, a: 1}
+			color: {h: 130, s: 1, l: 0.5, a: 1},
+			name: 'fireChasing'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 50;
@@ -550,7 +591,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var darkFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 20, s: 1, l: 0.1, a: 1}
+			color: {h: 20, s: 1, l: 0.1, a: 1},
+			name: 'darkFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire]);
 
 		e.fireCooldown = 40;
@@ -572,7 +614,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var autoTeleporting = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 60, s: 1, l: 0.7, a: 1}
+			color: {h: 60, s: 1, l: 0.7, a: 1},
+			name: 'autoTeleporting'
 		}, [Behaviours.alignRotationToMovement, Behaviours.autoTeleport], [Behaviours.hp, Behaviours.teleport]);
 
 		e.teleportCooldown = 50;
@@ -585,7 +628,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var splitRandomFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 20, s: 0.9, l: 0.4, a: 1}
+			color: {h: 20, s: 0.9, l: 0.4, a: 1},
+			name: 'splitRandomFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire], [], [Behaviours.split]);
 
 		e.fireCooldown = 33;
@@ -610,7 +654,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var burstOnHit = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 40, s: 0.9, l: 0.5, a: 1}
+			color: {h: 40, s: 0.9, l: 0.5, a: 1},
+			name: 'burstOnHit'
 		}, [Behaviours.alignRotationToMovement], [], [Behaviours.counterAttack]);
 
 		e.aimError = 0;
@@ -634,7 +679,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpIndestructibleCounterAttack = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 40, s: 0.9, l: 0.55, a: 1}
+			color: {h: 40, s: 0.9, l: 0.55, a: 1},
+			name: 'hpIndestructibleCounterAttack'
 		}, [Behaviours.alignRotationToMovement], [], [Behaviours.hp, Behaviours.counterAttack]);
 
 		e.aimError = 0;
@@ -659,7 +705,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpFastAimedFiring = function(){
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(6, randomAngle()),
-			color: {h: 20, s: 0.6, l: 0.5, a: 1}
+			color: {h: 20, s: 0.6, l: 0.5, a: 1},
+			name: 'hpFastAimedFiring'
 		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
 
 		e.aimError = deg2rad(10);
@@ -683,7 +730,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	var hpSmallChasing = function(){
 		var e = createEnemy(getEnemyPosition(), 0.04, {
 			linearVelocity: rtToVector(3, randomAngle()),
-			color: {h: 10, s: 0.9, l: 0.4, a: 1}
+			color: {h: 10, s: 0.9, l: 0.4, a: 1},
+			name: 'hpSmallChasing'
 		}, [Behaviours.alignRotationToMovement, Behaviours.chasePlayer], [Behaviours.hp]);
 
 		e.hp = 5;
@@ -695,7 +743,8 @@ function generateWave(enemy, wave, player, oldEnemy) {
 		var e = createEnemy(getEnemyPosition(), 0.12, {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 140, s: 1, l: 0.5, a: 1},
-			scoreOnDestroy: parent ? 0 : 1
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'moveForceToPlayer'
 		}, [Behaviours.alignRotationToMovement, Behaviours.forceToPlayer], [Behaviours.hp]);
 
 		e.hp = 3;

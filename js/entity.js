@@ -66,8 +66,10 @@ var SqEntity = (function(){
 			this.scoreOnDestroy = typeof options.scoreOnDestroy === 'undefined' ? (this.lifetime <= 0 ? 1 : 0) : options.scoreOnDestroy;
 			this.preventNextWave = typeof options.preventNextWave === 'undefined' ? (type === TYPE_ENEMY) : options.preventNextWave;
 			this.destroySound = options.destroySound;
+			
 			this.kills = 0;
 			this.parent = null;
+			this.name = options.name || "";
 
 			this.stepAction = [];
 			this.onHitAction = [];
@@ -212,13 +214,14 @@ function createEnemy(location, size, options, behaviours, onHit, postHit) {
  * @param powerup Effect to be done when this powerup is taken by player. Functions are defined in a similar fashion as behaviours. May not create new 
  *                entity. Returns 'lives+2' to add lives by 2, same goes to wave and score. 
  */
-function createPowerup(location, timeout, color, powerup) {
+function createPowerup(location, timeout, color, type, powerup) {
 	var e = Object.create(SqEntity);
 	e.init(TYPE_POWERUP, location, 0.12, {lifetime: timeout, destroySound: 'sound/powerup.ogg'});
 
 	e.timeout = timeout;
 	e.color = color;
 	e.powerup = powerup;
+	e.puType = type;
 
 	e.draw = function(){
 		var canvas = document.getElementById('game-scene').getContext('2d');

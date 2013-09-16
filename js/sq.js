@@ -48,6 +48,7 @@ var DEBUG_WAVE = false;
 	var playerParticlesCreated = false;
 	function step(timestamp) {
 		if (pausing) return;
+		if (!running) return;
 
 		checkCompleted();
 		generatePowerup();
@@ -375,7 +376,7 @@ var DEBUG_WAVE = false;
 					powerupFunc = function(keys, mouse, player, playerBullet, enemy) {
 						return 'lives+1';
 					};
-					nextLifePowerup += 100;
+					nextLifePowerup += 200;
 					break;
 				case 1: 
 					color = {h: 180, s: 1, l: 0.5, a: 1}; 
@@ -393,6 +394,7 @@ var DEBUG_WAVE = false;
 		storeStats();
 	
 		running = false;
+		nextLifePowerup = 0;
 		world = null;
 		player = null;
 		playerBullet = [];

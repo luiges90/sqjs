@@ -516,7 +516,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 				preventNextWave: false,
 				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
-			}, [Behaviours.alignRotationToMovement, Behaviours.sneaky], [Behaviours.hpImmuneWhenBlink]);
+			}, [Behaviours.alignRotationToMovement, Behaviours.sneaky]);
 
 			e.hp = 1;
 			e.sneakyRange = 1;
@@ -701,19 +701,19 @@ function generateWave(enemy, wave, player, oldEnemy) {
 			linearVelocity: rtToVector(3, randomAngle()),
 			color: {h: 40, s: 0.9, l: 0.55, a: 1},
 			name: 'hpIndestructibleCounterAttack'
-		}, [Behaviours.alignRotationToMovement], [], [Behaviours.hp, Behaviours.counterAttack]);
+		}, [Behaviours.alignRotationToMovement], [Behaviours.hp], [Behaviours.counterAttack]);
 
 		e.aimError = 0;
 		e.bulletSpeed = 5;
 		e.bulletSpread = 3;
 		e.bulletSpreadAngle = deg2rad(10);
-		e.hp = 5;
+		e.hp = 3;
 		e.createBullet = function(parent, velocity) {
 			return createEnemy(parent.body.GetPosition(), 0.06, {
 				linearVelocity: velocity,
 				color: parent.color,
 				scoreOnDestroy: 0,
-				lifetime: 100,
+				lifetime: 60,
 				preventNextWave: false,
 				generateParticles: false,
 				destroySound: 'sound/bulletDestroy.ogg'
@@ -771,6 +771,216 @@ function generateWave(enemy, wave, player, oldEnemy) {
 
 		e.hp = 3;
 		e.toPlayerForce = 0.01;
+		return e;
+	};
+	
+	var chaserGenerator = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 110, s: 0.9, l: 0.5, a: 1},
+			name: 'chaserGenerator'
+		}, [Behaviours.alignRotationToMovement, Behaviours.randomFire], [Behaviours.hp]);
+
+		e.fireCooldown = 100;
+		e.bulletSpeed = 3;
+		e.hp = 8;
+		e.createBullet = chasing;
+
+		return e;
+	};
+	
+	var immuneTarget = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 150, s: 1, l: 0.7, a: 1},
+			name: 'immuneTarget'
+		}, [Behaviours.alignRotationToMovement], [Behaviours.hp]);
+
+		e.hp = 8;
+		
+		return e;
+	};
+	
+	var immuneUntilTargetBeaten = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 150, s: 1, l: 0.5, a: 1},
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'immuneUntilTargetBeaten'
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.immuneUntilTargetBeaten]);
+
+		e.targetName = 'immuneTarget';
+		e.fireCooldown = 50;
+		e.aimError = 0;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false,
+				generateParticles: false,
+				destroySound: 'sound/bulletDestroy.ogg'
+			}, [Behaviours.alignRotationToMovement]);
+		};
+
+		return e;
+	};
+	
+	var burstBullet = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 160, s: 1, l: 0.5, a: 1},
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'burstBullet'
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
+
+		e.fireCooldown = 50;
+		e.aimError = 0;
+		e.bulletSpeed = 3;
+		e.hp = 5;
+		e.createBullet = function(parent, velocity) {
+			var b = createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false,
+				generateParticles: false,
+				destroySound: 'sound/bulletDestroy.ogg'
+			}, [Behaviours.alignRotationToMovement], [], [Behaviours.counterAttack]);
+			
+			b.aimError = 0;
+			b.bulletSpeed = 5;
+			b.bulletSpread = 12;
+			b.bulletSpreadAngle = deg2rad(360 / 12);
+			
+			b.createBullet = function(parent, velocity) {
+				return createEnemy(parent.body.GetPosition(), 0.06, {
+					linearVelocity: velocity,
+					color: parent.color,
+					scoreOnDestroy: 0,
+					lifetime: 60,
+					preventNextWave: false,
+					generateParticles: false,
+					destroySound: 'sound/bulletDestroy.ogg'
+				}, [Behaviours.alignRotationToMovement]);
+			}
+			
+			return b;
+		};
+
+		return e;
+	};
+	
+	var attractCounterAttack = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 170, s: 1, l: 0.5, a: 1},
+			name: 'attractCounterAttack'
+		}, [Behaviours.alignRotationToMovement, Behaviours.attractBullet], [Behaviours.hp], [Behaviours.counterAttack]);
+
+		e.hp = 30;
+		e.attractingForce = 0.001;
+		e.aimError = 0;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 100,
+				preventNextWave: false,
+				generateParticles: false,
+				destroySound: 'sound/bulletDestroy.ogg'
+			}, [Behaviours.alignRotationToMovement]);
+		};
+
+		return e;
+	};
+	
+	var repelAimedFiring = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 180, s: 1, l: 0.5, a: 1},
+			name: 'repelAimedFiring'
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire, Behaviours.repelBullet], [Behaviours.hp]);
+
+		e.repellingForce = 0.001;
+		e.fireCooldown = 100;
+		e.bulletSpeed = 5;
+		e.bulletSpread = 3;
+		e.hp = 3;
+		e.bulletSpreadAngle = deg2rad(10);
+		e.aimError = 0;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false,
+				generateParticles: false,
+				destroySound: 'sound/bulletDestroy.ogg'
+			}, [Behaviours.alignRotationToMovement]);
+		};
+
+		return e;
+	};
+	
+	var frequentAimedFiring = function(){
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 190, s: 1, l: 0.5, a: 1},
+			scoreOnDestroy: parent ? 0 : 1,
+			name: 'speedyEscape'
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire]);
+
+		e.fireCooldown = 33;
+		e.aimError = 0;
+		e.bulletSpeed = 5;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: parent.color,
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false,
+				generateParticles: false,
+				destroySound: 'sound/bulletDestroy.ogg'
+			}, [Behaviours.alignRotationToMovement]);
+		};
+
+		return e;
+	};
+	
+	var transparentFiring = function() {
+		var e = createEnemy(getEnemyPosition(), 0.12, {
+			linearVelocity: rtToVector(3, randomAngle()),
+			color: {h: 200, s: 1, l: 0.5, a: 0},
+			name: 'transparentFiring'
+		}, [Behaviours.alignRotationToMovement, Behaviours.aimedFire], [Behaviours.hp]);
+
+		e.transparentTime = 1000;
+		e.fireCooldown = 100;
+		e.bulletSpeed = 5;
+		e.bulletSpread = 3;
+		e.hp = 3;
+		e.bulletSpreadAngle = deg2rad(10);
+		e.aimError = 0;
+		e.createBullet = function(parent, velocity) {
+			return createEnemy(parent.body.GetPosition(), 0.06, {
+				linearVelocity: velocity,
+				color: {h: 200, s: 1, l: 0.5, a: 1},
+				scoreOnDestroy: 0,
+				lifetime: 60,
+				preventNextWave: false,
+				generateParticles: false,
+				destroySound: 'sound/bulletDestroy.ogg'
+			}, [Behaviours.alignRotationToMovement]);
+		};
+
 		return e;
 	};
 
@@ -840,7 +1050,7 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[60] = [].pushMul(10, darkFiring);
 	waveData[61] = [].pushMul(7, darkFiring).pushMul(5, sneaky);
 	waveData[62] = [].pushMul(7, fireChasing);
-	waveData[63] = [].pushMul(5, fireChasing).pushMul(5, largeFiring).pushMul(2, generator);
+	waveData[63] = [].pushMul(5, fireChasing).pushMul(2, generator).pushMul(2, sneakyMineLayer);
 	waveData[64] = [].pushMul(12, autoTeleporting);
 	waveData[65] = [].pushMul(6, autoTeleporting).pushMul(3, indestructibleFiring).pushMul(3, smallChasing);
 	waveData[66] = [].pushMul(8, hpIndestructibleCounterAttack);
@@ -858,6 +1068,28 @@ function generateWave(enemy, wave, player, oldEnemy) {
 	waveData[78] = [].pushMul(3, moveForceToPlayer).pushMul(6, hpSmallChasing).pushMul(3, hpFastAimedFiring).pushMul(3, darkFiring);
 	waveData[79] = [].pushMul(6, fireChasing).pushMul(3, moveForceToPlayer).pushMul(6, burstOnHit).
 					pushMul(3, hpIndestructibleCounterAttack).pushMul(3, splitRandomFiring);
+	waveData[80] = [].pushMul(6, chaserGenerator);
+	waveData[82] = [].pushMul(4, chaserGenerator).pushMul(4, splitRandomFiring);
+	waveData[81] = [].pushMul(4, chaserGenerator).pushMul(6, hpSmallChasing).pushMul(2, sneakyMineLayer);
+	waveData[83] = [].pushMul(12, immuneTarget).pushMul(3, immuneUntilTargetBeaten);
+	waveData[84] = [].pushMul(5, immuneTarget).pushMul(2, immuneUntilTargetBeaten).pushMul(4, chaserGenerator).pushMul(2, autoTeleporting);
+	waveData[85] = [].pushMul(8, burstBullet);
+	waveData[86] = [].pushMul(3, burstBullet).pushMul(5, immuneTarget).pushMul(1, immuneUntilTargetBeaten).pushMul(3, hpIndestructibleCounterAttack);
+	waveData[87] = [].pushMul(10, attractCounterAttack);
+	waveData[88] = [].pushMul(10, repelAimedFiring);
+	waveData[89] = [].pushMul(5, repelAimedFiring).pushMul(3, sneaky).pushMul(3, hpIndestructibleCounterAttack);
+	waveData[90] = [].pushMul(5, attractCounterAttack).pushMul(5, autoTeleporting);
+	waveData[91] = [].pushMul(3, attractCounterAttack).pushMul(3, repelAimedFiring).pushMul(3, chaserGenerator);
+	waveData[92] = [].pushMul(12, frequentAimedFiring);
+	waveData[93] = [].pushMul(6, frequentAimedFiring).pushMul(3, hpIndestructibleCounterAttack).pushMul(3, burstBullet);
+	waveData[94] = [].pushMul(12, transparentFiring);
+	waveData[95] = [].pushMul(4, transparentFiring).pushMul(6, darkFiring).pushMul(8, sneaky);
+	waveData[96] = [].pushMul(4, frequentAimedFiring).pushMul(4, transparentFiring).pushMul(4, hpIndestructibleCounterAttack);
+	waveData[97] = [].pushMul(5, chaserGenerator).pushMul(8, immuneTarget).pushMul(3, immuneUntilTargetBeaten).pushMul(4, largeFiring);
+	waveData[98] = [].pushMul(5, attractCounterAttack).pushMul(5, frequentAimedFiring).pushMul(5, burstBullet).pushMul(3, hpFastAimedFiring);
+	waveData[99] = [].pushMul(3, chaserGenerator).pushMul(3, burstBullet).pushMul(3, immuneTarget)
+					.pushMul(3, immuneUntilTargetBeaten).pushMul(3, attractCounterAttack)
+					.pushMul(3, repelAimedFiring).pushMul(3, transparentFiring).pushMul(3, frequentAimedFiring);
 
 	$.each(waveData[(wave - 1) % waveData.length], function(){
 		for (var i = 0; i < Math.ceil(wave / waveData.length); i++) {

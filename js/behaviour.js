@@ -313,6 +313,20 @@ var Behaviours = (function() {
 			this.body.ApplyImpulse(force, this.body.GetWorldCenter());
 		},
 
+		immuneUntilTargetBeaten: function(keys, mouse, player, playerBullet, enemy) {
+			requiredFields.call(this, ['targetName']);
+		
+			var that = this;
+			var immune = false;
+			$.each(enemy, function(){
+				if (this.name == that.targetName) {
+					immune = true;
+					return false;
+				}
+			});
+			return immune;
+		},
+
 	};
 
 })();

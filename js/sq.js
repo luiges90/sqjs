@@ -4,7 +4,7 @@ var world;
 
 var FPS = 60;
 
-var DEBUG_WAVE = false;
+var DEBUG_WAVE = 1000;
 
 (function() {
 
@@ -361,6 +361,7 @@ var DEBUG_WAVE = false;
 	
 	var nextLifePowerup = 0;
 	function generatePowerup() {
+		if (DEBUG_WAVE) return;
 		if (Math.random() < 1 / 20 / FPS) {
 			var color, powerupFunc;
 			

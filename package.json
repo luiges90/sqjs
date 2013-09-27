@@ -1,7 +1,7 @@
 {
 	"name": "sqjs",
 	"version": "0.8.0",
-	"licenses": "FreeBSD",
+	"license": "FreeBSD",
 	"repository": {
 		"type": "git",
 		"url": "http://github.com/luiges90/sqjs.git"

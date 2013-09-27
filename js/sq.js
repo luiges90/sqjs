@@ -4,7 +4,7 @@ var world;
 
 var FPS = 60;
 
-var DEBUG_WAVE = 1000;
+var DEBUG_WAVE = false;
 
 (function() {
 
@@ -23,11 +23,14 @@ var DEBUG_WAVE = 1000;
 	var killedInWave;
 	var powerupGenerated;
 	var powerupTaken;
+	var timeTaken;
+	var timeInPausing;
+	var pauseStart;
 	
 	var KILLED_IN_WAVE_COUNT_KEY = 'sq_killed_in_wave_count';
 	var POWERUP_GENERATED_KEY = 'sq_powerup_generated';
 	var POWERUP_TAKEN_KEY = 'sq_powerup_taken';
-	var WAVE_REACHED_KEY = 'sq_wave_reached';
+	var TIME_TAKEN_KEY = 'sq_time_taken';
 
 	var pausing = false;
 	var running = false;
@@ -212,6 +215,8 @@ var DEBUG_WAVE = 1000;
 		killedInWave = 0;
 		powerupGenerated = [0, 0];
 		powerupTaken = [0, 0];
+		timeTaken = Date.now();
+		timeInPausing = 0;
 	}
 	
 	function storeStats() {
@@ -236,13 +241,14 @@ var DEBUG_WAVE = 1000;
 			};
 			localStorage.setItem(POWERUP_TAKEN_KEY, JSON.stringify(oldPowerupTaken));
 			
-			var oldWaveReached = JSON.parse(localStorage.getItem(WAVE_REACHED_KEY)) || [];
-			if (oldWaveReached[wave]) {
-				oldWaveReached[wave]++;
+			var oldTimeTaken = JSON.parse(localStorage.getItem(TIME_TAKEN_KEY)) || [];
+			console.log(timeInPausing, timeTaken);
+			if (oldTimeTaken[wave]) {
+				oldTimeTaken[wave].push(Date.now() - timeTaken - timeInPausing);
 			} else {
-				oldWaveReached[wave] = 1;
+				oldTimeTaken[wave] = [Date.now() - timeTaken - timeInPausing];
 			}
-			localStorage.setItem(WAVE_REACHED_KEY, JSON.stringify(oldWaveReached));
+			localStorage.setItem(TIME_TAKEN_KEY, JSON.stringify(oldTimeTaken));
 			
 			if (typeof enemyStoreStat === 'function') {
 				enemyStoreStat(enemy, wave, player, oldEnemy);
@@ -424,6 +430,12 @@ var DEBUG_WAVE = 1000;
 			keys[e.which] = true;
 			if (e.which === 80) {
 				pausing = !pausing;
+				if (pausing) {
+					pauseStart = Date.now();
+				} else {
+					timeInPausing += Date.now() - pauseStart;
+				}
+				console.log(timeInPausing);
 			}
 			return false;
 		});

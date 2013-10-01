@@ -242,7 +242,6 @@ var DEBUG_WAVE = false;
 			localStorage.setItem(POWERUP_TAKEN_KEY, JSON.stringify(oldPowerupTaken));
 			
 			var oldTimeTaken = JSON.parse(localStorage.getItem(TIME_TAKEN_KEY)) || [];
-			console.log(timeInPausing, timeTaken);
 			if (oldTimeTaken[wave]) {
 				oldTimeTaken[wave].push(Date.now() - timeTaken - timeInPausing);
 			} else {

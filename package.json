@@ -1,14 +1,15 @@
 {
-	"name": "sqjs",
-	"version": "0.8.0",
-	"license": "FreeBSD",
-	"repository": {
-		"type": "git",
-		"url": "http://github.com/luiges90/sqjs.git"
-	},
-	"devDependencies": {
-		"grunt": "~0.4.1",
-		"grunt-contrib-uglify": "~0.2.2",
-		"grunt-contrib-cssmin": "~0.6.1"
-	}
+  "name": "sqjs",
+  "version": "0.8.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/luiges90/sqjs.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-cssmin": "~0.6.1",
+    "grunt-contrib-htmlmin": "~0.1.3"
+  }
 }

@@ -3,4 +3,4 @@ lib
 Box2dWeb*
 .DS_Store
 node_modules
-dist
+build

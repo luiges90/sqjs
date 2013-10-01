@@ -5,20 +5,45 @@ module.exports = function(grunt) {
 		uglify: {
 			build: {
 				src: 'js/*.js',
-				dest: 'dist/<%= pkg.name %>.min.js'
+				dest: 'build/sq.min.js'
 			}
 		},
 		cssmin: {
-			minify: {
+			build: {
 				src: 'css/*.css',
-				dest: 'dist/<%= pkg.name %>.min.css'
+				dest: 'build/sq.min.css'
+			}
+		},
+		htmlmin: {
+			build: {
+				options: {
+					removeComments: true,
+					removeCommentsFromCDATA: true,
+					removeCDATASectionsFromCDATA: true,
+					collapseBooleanAttributes: true,
+					removeRedundantAttributes: true,
+					removeEmptyAttributes: true
+				},
+				files: {
+					'build/index.html': 'index.html'
+				}
+			},
+		},
+		copy: {
+			build: {
+				files: [
+					{expand: true, src: ['img/*.png', 'sound/**'], dest: 'build/'},
+					{expand: true, src: ['lib/Box2dWeb-2.1.a.3.min.js'], dest: 'build/'},
+				]
 			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-htmlmin');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['uglify', 'cssmin']);
+	grunt.registerTask('default', ['uglify', 'cssmin', 'htmlmin', 'copy']);
 
 };

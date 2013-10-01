@@ -14,20 +14,12 @@ module.exports = function(grunt) {
 				dest: 'build/sq.min.css'
 			}
 		},
-		htmlmin: {
+		processhtml: {
 			build: {
-				options: {
-					removeComments: true,
-					removeCommentsFromCDATA: true,
-					removeCDATASectionsFromCDATA: true,
-					collapseBooleanAttributes: true,
-					removeRedundantAttributes: true,
-					removeEmptyAttributes: true
-				},
 				files: {
-					'build/index.html': 'index.html'
+					'build/index.html': 'sqjs.html'
 				}
-			},
+			}
 		},
 		copy: {
 			build: {
@@ -41,9 +33,9 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-contrib-htmlmin');
+	grunt.loadNpmTasks('grunt-processhtml');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['uglify', 'cssmin', 'htmlmin', 'copy']);
+	grunt.registerTask('default', ['uglify', 'cssmin', 'processhtml', 'copy']);
 
 };

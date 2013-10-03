@@ -319,7 +319,7 @@ var Behaviours = (function() {
 			var that = this;
 			var immune = false;
 			$.each(enemy, function(){
-				if (this.name == that.targetName) {
+				if (this.name === that.targetName) {
 					immune = true;
 					return false;
 				}

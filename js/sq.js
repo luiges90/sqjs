@@ -330,9 +330,9 @@ var DEBUG_WAVE = false;
 					var matched = result.match(/(lives|score|wave)\+(\d+)/);
 					if (matched) {
 						switch (matched[1]) {
-							case 'lives': lives += parseInt(matched[2]); break;
-							case 'score': score += parseInt(matched[2]); break;
-							case 'wave': wave += parseInt(matched[2]); break;
+							case 'lives': lives += parseInt(matched[2], 10); break;
+							case 'score': score += parseInt(matched[2], 10); break;
+							case 'wave': wave += parseInt(matched[2], 10); break;
 						}
 					}
 				}

@@ -53,6 +53,7 @@ var DEBUG_WAVE = false;
 		if (pausing) return;
 		if (!running) return;
 
+		playerCountdown();
 		checkCompleted();
 		generatePowerup();
 
@@ -255,6 +256,21 @@ var DEBUG_WAVE = false;
 			}
 		}
 	}
+	
+	var playerDestroyedCountdown = -1;
+	function playerCountdown()
+	{
+		if (playerDestroyedCountdown > 0) {
+			playerDestroyedCountdown--;
+			if (playerDestroyedCountdown <= 0) {
+				if (lives <= 0){
+					gameover();
+				} else {
+					revive();
+				}
+			}
+		}
+	}
 
 	function onPreSolve(contact, oldManifold) {
 		var a = contact.GetFixtureA().GetBody().GetUserData();
@@ -277,11 +293,7 @@ var DEBUG_WAVE = false;
 
 			if (!p.isInvincible() && !p.isDestroyed()) {
 				lives--;
-				if (lives <= 0) {
-					setTimeout(gameover, 4000);
-				} else {
-					setTimeout(revive, 4000);
-				}
+				playerDestroyedCountdown = 4000 / FPS;
 
 				p.body.SetLinearVelocity(new b2Vec2(0, 0));
 				p.destroy(true);

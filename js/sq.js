@@ -53,7 +53,7 @@ var DEBUG_WAVE = false;
 		if (pausing) return;
 		if (!running) return;
 
-		playerCountdown();
+		if (!playerCountdown()) return;
 		checkCompleted();
 		generatePowerup();
 
@@ -265,11 +265,13 @@ var DEBUG_WAVE = false;
 			if (playerDestroyedCountdown <= 0) {
 				if (lives <= 0){
 					gameover();
+					return false;
 				} else {
 					revive();
 				}
 			}
 		}
+		return true;
 	}
 
 	function onPreSolve(contact, oldManifold) {
@@ -363,7 +365,7 @@ var DEBUG_WAVE = false;
 			}
 		});
 
-		if (completed){
+		if (completed && lives > 0){
 			storeStats();
 		
 			initStats();

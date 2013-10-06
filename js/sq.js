@@ -293,7 +293,7 @@ var DEBUG_WAVE = false;
 
 			if (!p.isInvincible() && !p.isDestroyed()) {
 				lives--;
-				playerDestroyedCountdown = 4000 / FPS;
+				playerDestroyedCountdown = 4 * FPS;
 
 				p.body.SetLinearVelocity(new b2Vec2(0, 0));
 				p.destroy(true);

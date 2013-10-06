@@ -167,6 +167,7 @@ var DEBUG_WAVE = false;
 	}
 	
 	function emitParticles() {
+		if (pausing) return;
 		for (var i = 0; i < particleEmitters.length; ++i) {
 			particleEmitters[i].lifetime--;
 			if (particleEmitters[i].lifetime <= 0) {
@@ -434,7 +435,6 @@ var DEBUG_WAVE = false;
 				} else {
 					timeInPausing += Date.now() - pauseStart;
 				}
-				console.log(timeInPausing);
 			}
 			return false;
 		});

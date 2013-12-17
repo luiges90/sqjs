@@ -95,6 +95,23 @@ var SqEntity = (function(){
 			{
 				this.destroy(false);
 			}
+			
+			if (this.body.GetPosition().x < -3) 
+			{
+				this.body.SetPosition(new b2Vec2(3, this.body.GetPosition().y));
+			}
+			if (this.body.GetPosition().x > 3) 
+			{
+				this.body.SetPosition(new b2Vec2(-3, this.body.GetPosition().y));
+			}
+			if (this.body.GetPosition().y < -3) 
+			{
+				this.body.SetPosition(new b2Vec2(this.body.GetPosition().x, 3));
+			}
+			if (this.body.GetPosition().y > 3) 
+			{
+				this.body.SetPosition(new b2Vec2(this.body.GetPosition().x, -3));
+			}
 		},
 
 		destroy: function(playSound) {
